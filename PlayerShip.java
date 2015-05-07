@@ -7,16 +7,18 @@ import java.awt.image.BufferedImage;
 import java.awt.event.ActionEvent;
 import java.awt.MouseInfo;
 
-public class PlayerShip extends GameObject {
+public class PlayerShip extends AbstractGameObject implements Shooter {
 	//float
 	//private JPanel panel;
+	private static String imageLocation = GameTier.imagesFolder + "PlayerShipOpenGameArtAttribute.png";
+	private static int healthPoints = 3;
 
 	public PlayerShip() {
 		//offset for sprite width, length
 		//could just spill it out
-		super(3);
+		super(healthPoints, imageLocation);
 		//bad that 3 is not clear to be HP?
-		this.setImageLocation("PlayerShipOpenGameArtAttribute.png");
+		//this.setImageLocation(imageLocation);
 	}
 	/*
 	public PlayerShip() {
@@ -35,6 +37,7 @@ public class PlayerShip extends GameObject {
 	//decide how it's gonna work, if not different then pull it out
 	@Override
 	public void move() {
+		//could utilize super.move(); but that won't force an override, which is needed to setDirection
 		this.setXPosition(this.getXPosition() + this.getXVelocity());
 		this.setYPosition(this.getYPosition() - this.getYVelocity());
 		this.setXDirection(MouseInfo.getPointerInfo().getLocation().getX() - getXPosition());
@@ -63,6 +66,16 @@ public class PlayerShip extends GameObject {
 			this.setXVelocity(0);
 		} else if (keyEvent.getKeyCode() == KeyEvent.VK_A || keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
 			this.setXVelocity(0);
+		}
+	}
+
+	@Override
+	public void fire() {
+		try {
+			GameTier.gameEngine.addBullet(this);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			System.exit(0);
 		}
 	}
 

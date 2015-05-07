@@ -2,21 +2,22 @@ import javax.swing.Timer;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class GameStarter {
-	/*
-	public GameEngine engine;
-	public GameWindow window;
-	public PlayerShip player;
-	*/
+public class GameTier {
+	public static GameEngine gameEngine;
+	public static GameWindow gameWindow;
+	public static String imagesFolder = "images/";
+	//public static PlayerShip player;
+	
 	public static void main(String[] args) {
 		//concrete safe structure?
-		GameWindow gameWindow = new GameWindow();
-		GameEngine engine = new GameEngine(gameWindow);
-		PlayerShip player = new PlayerShip();
-		engine.addGameObject(player);
+		gameWindow = new GameWindow();
+		gameEngine = new GameEngine(gameWindow);
+		//gameWindow.setVisible(true);
+		//PlayerShip player = new PlayerShip();
+		//engine.addGameObject(player);
 
 		int interval = 17;
-		ActionListener gameLoop = (ActionEvent ae) -> { engine.update(); gameWindow.repaint(); };
+		ActionListener gameLoop = (ActionEvent ae) -> { gameEngine.update(); gameWindow.repaint(); };
 		Timer timer = new Timer(interval, gameLoop);
 		timer.setRepeats(true);
 		timer.start();

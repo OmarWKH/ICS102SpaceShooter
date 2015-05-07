@@ -1,0 +1,9 @@
+PlayerShip:
+ http://opengameart.org/content/spaceship-9
+ cyberjobe
+ Public Domain CC0
+
+Bullet:
+ http://opengameart.org/content/sci-fi-space-simple-bullets
+ Bonsaiheldin | http://bonsaiheld.org
+ Public Domain CC0

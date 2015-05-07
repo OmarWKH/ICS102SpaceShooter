@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 import java.awt.event.KeyEvent;
 import java.awt.Color;
 //import javax.swing.Action;
@@ -31,7 +33,7 @@ public class GameWindow extends JFrame {
 		return this.gamePanel;
 	}
 
-	public void setGameObjects(ArrayList<GameObject> gameObjects) {
+	public void setGameObjects(ArrayList<AbstractGameObject> gameObjects) {
 		this.gamePanel.setGameObjects(gameObjects);
 	}
 
@@ -44,11 +46,11 @@ public class GameWindow extends JFrame {
 	how-to-repaint-properly-in-jpanel-inside-jframe
 */
 
-
-	public class GamePanel extends JPanel implements KeyListener {
+	//sperate
+	public class GamePanel extends JPanel implements KeyListener, MouseListener {
 		//private GameEngine engine;
 		private PlayerShip player;
-		private ArrayList<GameObject> gameObjects;
+		private ArrayList<AbstractGameObject> gameObjects;
 		//private sprites? array of 'em?
 
 		/*
@@ -74,7 +76,9 @@ public class GameWindow extends JFrame {
 			//this.gameEngine = engine;
 			//this.player = engine.getPlayer();
 			this.addKeyListener(this);
+			this.addMouseListener(this);
 			this.setBackground(Color.BLACK);
+			gameObjects = new ArrayList<AbstractGameObject>(); //dummy for paint, tied to structure problem
 
 			/*
 			this.getInputMap().put(KeyStroke.getKeyStroke("W"), "Move Up");
@@ -102,9 +106,14 @@ public class GameWindow extends JFrame {
 			super.paint(g);
 			Graphics2D g2d = (Graphics2D)g;
 
-			for (GameObject gameObject : gameObjects) {
-				//could be called anywhere
-				gameObject.draw(g2d);
+			for (AbstractGameObject gameObject : gameObjects) {
+				try {
+					gameObject.draw(g2d);
+				} catch (Exception ex) {
+					System.out.println("Object failed painting: " + gameObject);
+					ex.printStackTrace();
+					System.exit(0);
+				}
 			}
 		}
 
@@ -112,7 +121,7 @@ public class GameWindow extends JFrame {
 			this.player = player;
 		}
 
-		public void setGameObjects(ArrayList<GameObject> gameObjects) {
+		public void setGameObjects(ArrayList<AbstractGameObject> gameObjects) {
 			this.gameObjects = gameObjects;
 		}
 
@@ -135,6 +144,27 @@ public class GameWindow extends JFrame {
 
 		@Override
 		public void keyTyped(KeyEvent keyEvent) {
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent me) {
+			player.fire();
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent me) {
+		}
+
+		@Override
+		public void mouseExited(MouseEvent me) {
+		}
+
+		@Override
+		public void mousePressed(MouseEvent me) {
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
 		}
 	}
 }
