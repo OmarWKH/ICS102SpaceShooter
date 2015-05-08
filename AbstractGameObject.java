@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.awt.Color;
+import java.awt.geom.Point2D;
 
 public abstract class AbstractGameObject implements GameObject {
 	//float
@@ -15,7 +16,8 @@ public abstract class AbstractGameObject implements GameObject {
 	private double yVelocity;
 	private double xDirection;
 	private double yDirection;
-	public JPanel panel;
+	//even if static, a method to initlize it would make it less, hardcody
+	public static JPanel panel = GameTier.gameWindow.getInGamePanel();
 	private BufferedImage image;
 	private AffineTransform affineTransform;
 	private int helathPoints;
@@ -52,10 +54,17 @@ public abstract class AbstractGameObject implements GameObject {
 	}
 
 	@Override
-	public abstract void move();
+	public void move() {
+		this.movePosition();
+		this.moveDirection();
+	}
+
+	public abstract void movePosition();
+	public abstract void moveDirection();
+
 	//if panel is scaled location won't update accordingly
 	@Override
-	public abstract void initializeLocationOn(JPanel panel);
+	public abstract void initializeLocation();
 
 	public double getXPosition() {
 		return this.xPosition;
@@ -69,6 +78,11 @@ public abstract class AbstractGameObject implements GameObject {
 	}
 	public void setYPosition(double yPosition) {
 		this.yPosition = yPosition;
+	}
+
+	public void setPosition(Point2D.Double point) {
+		this.setXPosition(point.getX());
+		this.setYPosition(point.getY());
 	}
 
 	public double getXVelocity() {

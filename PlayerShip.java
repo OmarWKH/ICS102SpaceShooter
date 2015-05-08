@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import java.awt.event.ActionEvent;
 import java.awt.MouseInfo;
 
-public class PlayerShip extends AbstractGameObject implements Shooter {
+public class PlayerShip extends AbstractShip implements Shooter {
 	//float
 	//private JPanel panel;
 	private static String imageLocation = GameTier.imagesFolder + "PlayerShip.png";
@@ -18,7 +18,7 @@ public class PlayerShip extends AbstractGameObject implements Shooter {
 	public PlayerShip() {
 		//offset for sprite width, length
 		//could just spill it out
-		super(healthPoints, imageLocation);
+		super(PlayerShip.healthPoints, PlayerShip.imageLocation);
 		//bad that 3 is not clear to be HP?
 		//this.setImageLocation(imageLocation);
 	}
@@ -30,45 +30,37 @@ public class PlayerShip extends AbstractGameObject implements Shooter {
 	*/
 
 	@Override
-	public void initializeLocationOn(JPanel panel) {
-		this.panel = panel;
+	public void initializeLocation() {
 		this.setXPosition(panel.getWidth()/2);
 		this.setYPosition(panel.getHeight()/2);
 	}
 
 	//decide how it's gonna work, if not different then pull it out
+
+	/*
 	@Override
 	public void move() {
 		//happens to bullets too, sometimes things get slower than they need be
 
 		//could utilize super.move(); but that won't force an override, which is needed to setDirection
-		double newXPosition = this.getXPosition() + this.getXVelocity();
-		double newYPosition = this.getYPosition() - this.getYVelocity();
-		
-		if (this.getXCenter() > panel.getWidth()) {
-			this.setXPosition(newXPosition - panel.getWidth());
-		} else if (this.getXCenter() < 0) {
-			//was < width, had flickering, but appeared both side same time which is pretty darn cool
-			this.setXPosition(newXPosition + panel.getWidth());
-		} else {
-			this.setXPosition(newXPosition);
-		}
-
-		if (this.getYCenter() > panel.getHeight()) {
-			this.setYPosition(newYPosition - panel.getHeight());
-		} else if (this.getYCenter() < 0) {
-			this.setYPosition(newYPosition + panel.getHeight());
-		} else {
-			this.setYPosition(newYPosition);
-		}
 
 		System.out.println(this.getXPosition() + ".." + this.getYPosition());
 
-		this.setXDirection(MouseInfo.getPointerInfo().getLocation().getX() - getXPosition());
-		this.setYDirection(MouseInfo.getPointerInfo().getLocation().getY() - getYPosition());
-
 		//System.out.println(MouseInfo.getPointerInfo().getLocation().getX() + ".." + getXPosition());
 		//System.out.println(MouseInfo.getPointerInfo().getLocation().getY() + ".." + getYPosition());
+	}
+	*/
+
+	@Override
+	public void moveDirection() {
+		//center is a little off
+		double dX = (MouseInfo.getPointerInfo().getLocation().getX() - getXCenter());
+		double dY = (MouseInfo.getPointerInfo().getLocation().getY() - getYCenter());
+		double l = Math.sqrt(Math.pow(dX,2)+Math.pow(dY,2));
+		//this.setXDirection(MouseInfo.getPointerInfo().getLocation().getX() - getXCenter());
+		//this.setYDirection(MouseInfo.getPointerInfo().getLocation().getY() - getYCenter());
+		this.setXDirection(dX/l);
+		this.setYDirection(dY/l);
 	}
 
 	

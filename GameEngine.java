@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.awt.geom.Point2D;
 
 public class GameEngine {
 	//this is dangerous terretory
@@ -8,7 +9,8 @@ public class GameEngine {
 	//private static GameEngine current;
 	private PlayerShip player;
 	private ArrayList<AbstractGameObject> gameObjects;
-	private GameWindow gameWindow;
+	public GameWindow gameWindow;
+	//must insure gameWindow is created first
 
 	//engine is acting as a "tier"
 	//forces gamewindow to be created first
@@ -77,7 +79,11 @@ public class GameEngine {
 	}
 
 	public void notifyObjectOfWindow(AbstractGameObject gameObject) {
-		gameObject.initializeLocationOn(this.getGameWindow());
-		//System.out.println("Notify object of window: " + gameObject);
+		gameObject.initializeLocation();
+		//System.out.println("Notify object of window: " + gameObject.getXPosition());
+	}
+
+	public static Point2D.Double getRandomLocation() {
+		return new Point2D.Double(50, 50);
 	}
 }

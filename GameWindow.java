@@ -72,7 +72,7 @@ public class GameWindow extends JFrame {
 		};
 		*/
 
-		private GamePanel() {
+		public GamePanel() {
 			//this.gameEngine = engine;
 			//this.player = engine.getPlayer();
 			this.addKeyListener(this);

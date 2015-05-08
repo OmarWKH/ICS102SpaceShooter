@@ -7,7 +7,7 @@ public interface GameObject {
 	//downside, had "setters" as protected, can't now
 	//do I want this interface thing more than I want the access thing?
 	public void move();
-	public void initializeLocationOn(JPanel panel);
+	public void initializeLocation();
 
 	public double getXPosition();
 	public void setXPosition(double xPosition);
