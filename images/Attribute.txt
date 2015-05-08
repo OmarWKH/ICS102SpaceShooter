@@ -7,3 +7,8 @@ Bullet:
  http://opengameart.org/content/sci-fi-space-simple-bullets
  Bonsaiheldin | http://bonsaiheld.org
  Public Domain CC0
+
+Bullet:
+ http://opengameart.org/content/bullet-collection-2-m484-games
+ Master484 | http://m484games.ucoz.com/
+ Public Domain CC0

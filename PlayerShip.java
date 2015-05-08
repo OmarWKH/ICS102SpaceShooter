@@ -10,8 +10,10 @@ import java.awt.MouseInfo;
 public class PlayerShip extends AbstractGameObject implements Shooter {
 	//float
 	//private JPanel panel;
-	private static String imageLocation = GameTier.imagesFolder + "PlayerShipOpenGameArtAttribute.png";
+	private static String imageLocation = GameTier.imagesFolder + "PlayerShip.png";
 	private static int healthPoints = 3;
+	private static long coolDownTime = 500; 
+	private long lastShotTime;
 
 	public PlayerShip() {
 		//offset for sprite width, length
@@ -37,15 +39,38 @@ public class PlayerShip extends AbstractGameObject implements Shooter {
 	//decide how it's gonna work, if not different then pull it out
 	@Override
 	public void move() {
+		//happens to bullets too, sometimes things get slower than they need be
+		
 		//could utilize super.move(); but that won't force an override, which is needed to setDirection
-		this.setXPosition(this.getXPosition() + this.getXVelocity());
-		this.setYPosition(this.getYPosition() - this.getYVelocity());
+		double newXPosition = this.getXPosition() + this.getXVelocity();
+		double newYPosition = this.getYPosition() - this.getYVelocity();
+		
+		if (this.getXCenter() > panel.getWidth()) {
+			this.setXPosition(newXPosition - panel.getWidth());
+		} else if (this.getXCenter() < 0) {
+			//was < width, had flickering, but appeared both side same time which is pretty darn cool
+			this.setXPosition(newXPosition + panel.getWidth());
+		} else {
+			this.setXPosition(newXPosition);
+		}
+
+		if (newYPosition - this.getYCenter() > panel.getHeight()) {
+			this.setYPosition(-1*this.getYPosition());
+		} else {
+			this.setYPosition(newYPosition);
+		}
+
+		System.out.println(this.getXPosition() + ".." + this.getYPosition());
+
 		this.setXDirection(MouseInfo.getPointerInfo().getLocation().getX() - getXPosition());
 		this.setYDirection(MouseInfo.getPointerInfo().getLocation().getY() - getYPosition());
+
+		//System.out.println(MouseInfo.getPointerInfo().getLocation().getX() + ".." + getXPosition());
+		//System.out.println(MouseInfo.getPointerInfo().getLocation().getY() + ".." + getYPosition());
 	}
 
 	
-	public void keyPressed(KeyEvent keyEvent) {
+	public void movementKeyPressed(KeyEvent keyEvent) {
 		if (keyEvent.getKeyCode() == KeyEvent.VK_W || keyEvent.getKeyCode() == KeyEvent.VK_UP) {
 			this.setYVelocity(this.getYVelocity() + 0.1);
 		} else if (keyEvent.getKeyCode() == KeyEvent.VK_S || keyEvent.getKeyCode() == KeyEvent.VK_DOWN) {
@@ -57,7 +82,7 @@ public class PlayerShip extends AbstractGameObject implements Shooter {
 		}
 	}
 
-	public void keyReleased(KeyEvent keyEvent) {
+	public void movementKeyReleased(KeyEvent keyEvent) {
 		if (keyEvent.getKeyCode() == KeyEvent.VK_W || keyEvent.getKeyCode() == KeyEvent.VK_UP) {
 			this.setYVelocity(0);
 		} else if (keyEvent.getKeyCode() == KeyEvent.VK_S || keyEvent.getKeyCode() == KeyEvent.VK_DOWN) {
@@ -70,14 +95,21 @@ public class PlayerShip extends AbstractGameObject implements Shooter {
 	}
 
 	@Override
-	public void fire() {
-		try {
+	public void shoot() {
+		if (timeToShoot()) {
 			GameTier.gameEngine.addBullet(this);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			System.exit(0);
+			lastShotTime = System.currentTimeMillis();
+		} else {
+			System.out.println("Player cooling down");
 		}
 	}
+
+	@Override
+	public boolean timeToShoot() {
+		return (System.currentTimeMillis() - lastShotTime >= PlayerShip.coolDownTime);
+	}
+
+
 
 	//limit access to pressing W, password as argument? lol
 	/*

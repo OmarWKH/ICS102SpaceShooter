@@ -132,14 +132,16 @@ public class GameWindow extends JFrame {
 		public void keyPressed(KeyEvent keyEvent) {
 			if (keyEvent.getKeyCode() == KeyEvent.VK_ESCAPE) {
 				System.exit(0);
+			} else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
+				player.shoot();
 			} else {
-				player.keyPressed(keyEvent);
+				player.movementKeyPressed(keyEvent);
 			}
 		}
 
 		@Override
 		public void keyReleased(KeyEvent keyEvent) {
-			player.keyReleased(keyEvent);
+			player.movementKeyReleased(keyEvent);
 		}
 
 		@Override
@@ -148,7 +150,7 @@ public class GameWindow extends JFrame {
 
 		@Override
 		public void mouseClicked(MouseEvent me) {
-			player.fire();
+			player.shoot();
 		}
 
 		@Override

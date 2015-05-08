@@ -17,9 +17,6 @@ public class GameEngine {
 		this.gameWindow = gameWindow;
 		this.gameObjects = new ArrayList<>();
 		player = new PlayerShip();
-		/**
-		Trying to get Player access to addBullet()
-		**/
 		this.addGameObject(player);
 		//this.setPlayer(player);
 		this.notifyWindowOfObjects();
@@ -50,7 +47,7 @@ public class GameEngine {
 		this.gameObjects.add(gameObject);
 		this.notifyObjectOfWindow(gameObject);
 		//System.out.println("Object adding: " + gameObject);
-		System.out.println(gameObjects.size());
+		System.out.println("Game Objects Count: " + gameObjects.size());
 	}
 
 	public ArrayList<AbstractGameObject> getGameObjects() {

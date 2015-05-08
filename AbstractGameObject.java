@@ -36,25 +36,19 @@ public abstract class AbstractGameObject implements GameObject {
 	//this won't work unless Directions are done in move and a image is passed
 	@Override
 	public void draw(Graphics2D g2d) {
-		double xCenter1 = xPosition;
-		double yCenter1 = yPosition;
-		double xCenter = xPosition + image.getWidth();
-		double yCenter = yPosition - image.getHeight();
-		//System.out.println(xCenter + ".." + xCenter1 + ".." + xPosition);
+		//double xCenter = xPosition + image.getWidth()/2;
+		//double yCenter = yPosition + image.getHeight()/2;
+		//System.out.println(image.getWidth() + ".." + image.getHeight());
 
 		affineTransform.setToIdentity();
-		affineTransform.rotate(xDirection, yDirection, xCenter1, yCenter1);
-		affineTransform.translate(xCenter1, yCenter1);
+		affineTransform.rotate(xDirection, yDirection, this.getXCenter(), this.getYCenter());
+		affineTransform.translate(xPosition, yPosition);
 		g2d.drawImage(image, affineTransform, null);
 		g2d.setColor(Color.RED);
-		g2d.drawOval((int)xCenter1, (int)yCenter1, 10, 10);
+		g2d.drawOval((int)xPosition, (int)yPosition, 10, 10);
 		g2d.setColor(Color.GREEN);
-		try {
-			g2d.drawOval(panel.getWidth()/2, panel.getHeight()/2, 10, 10);
-		} catch (NullPointerException npe) {
-			npe.printStackTrace();
-			System.exit(0);
-		}
+		//g2d.drawOval(panel.getWidth()/2, panel.getHeight()/2, 10, 10);
+		g2d.drawOval((int)this.getXCenter(), (int)this.getYCenter(), 10, 10);
 	}
 
 	@Override
@@ -105,6 +99,13 @@ public abstract class AbstractGameObject implements GameObject {
 		this.yDirection = yDirection;
 	}
 
+	public double getXCenter() {
+		return this.getXPosition() + this.getImage().getWidth()/2;
+	}
+	public double getYCenter() {
+		return this.getYPosition() + this.getImage().getHeight()/2;
+	}
+
 	public BufferedImage getImage() {
 		return this.image;
 	}
@@ -115,7 +116,9 @@ public abstract class AbstractGameObject implements GameObject {
 		try {
 			image = ImageIO.read(new File(imageLocation));
 		} catch (IOException ioe) {
+			System.out.println("Failed to load image at: " + imageLocation);
 			ioe.printStackTrace();
+			System.exit(0);
 		}
 	}
 

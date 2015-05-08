@@ -27,6 +27,9 @@ public interface GameObject {
 	public double getYDirection();
 	public void setYDirection(double yDirection);
 
+	public double getXCenter();
+	public double getYCenter();
+
 	public BufferedImage getImage();
 	public void setImageLocation(String imageLocation);
 
