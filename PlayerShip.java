@@ -40,7 +40,7 @@ public class PlayerShip extends AbstractGameObject implements Shooter {
 	@Override
 	public void move() {
 		//happens to bullets too, sometimes things get slower than they need be
-		
+
 		//could utilize super.move(); but that won't force an override, which is needed to setDirection
 		double newXPosition = this.getXPosition() + this.getXVelocity();
 		double newYPosition = this.getYPosition() - this.getYVelocity();
@@ -54,10 +54,12 @@ public class PlayerShip extends AbstractGameObject implements Shooter {
 			this.setXPosition(newXPosition);
 		}
 
-		if (newYPosition - this.getYCenter() > panel.getHeight()) {
-			this.setYPosition(-1*this.getYPosition());
+		if (this.getYCenter() > panel.getHeight()) {
+			this.setYPosition(newYPosition - panel.getHeight());
+		} else if (this.getYCenter() < 0) {
+			this.setYPosition(newYPosition + panel.getHeight());
 		} else {
-			this.setYPosition(newYPosition);
+			this.setXPosition(newYPosition);
 		}
 
 		System.out.println(this.getXPosition() + ".." + this.getYPosition());

@@ -17,6 +17,10 @@ public class Bullet extends AbstractGameObject {
 
 	@Override
 	public void initializeLocationOn(JPanel panel) {
+		//not accurate to mouse
+		//speed change depending on how far the mouse is, this because of how direction is calculated and how it gets into position
+		//could be kind of a mechanic, the faster it is the more harmful, and the less accurate, that's the lazy to a fault solution
+
 		this.panel = panel;
 		this.setXPosition(shooter.getXCenter() - this.getImage().getWidth()/2);
 		this.setYPosition(shooter.getYCenter() - this.getImage().getHeight()/2);
