@@ -59,7 +59,7 @@ public class PlayerShip extends AbstractGameObject implements Shooter {
 		} else if (this.getYCenter() < 0) {
 			this.setYPosition(newYPosition + panel.getHeight());
 		} else {
-			this.setXPosition(newYPosition);
+			this.setYPosition(newYPosition);
 		}
 
 		System.out.println(this.getXPosition() + ".." + this.getYPosition());
