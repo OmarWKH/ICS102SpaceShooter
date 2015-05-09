@@ -26,15 +26,17 @@ public class RandomLocation {
 		this.locations = new LinkedList<>();
 
 		ListIterator<Point2D.Double> addingIterator = locations.listIterator(0);
-		for (int x = 0, y = 0; (x < width) && (y < height); x += stepX, y += stepY) {
-			addingIterator.add(new Point2D.Double(x, y));
+		for (int x = 0; x < width; x += stepX) {
+			for (int y = 0; y < height; y+= stepY) {
+				addingIterator.add(new Point2D.Double(x, y));
+			}
 		}
 
 		//still not sure I'll always get n, area not touched
-		Random randomizer = new Random();
-		Collections.shuffle(locations, randomizer);
-		randomizer = new Random();
-		Collections.shuffle(locations, randomizer);
+		//Random randomizer = new Random();
+		Collections.shuffle(locations);
+		//randomizer = new Random();
+		//Collections.shuffle(locations, randomizer);
 	}
 
 	public Point2D.Double next() {

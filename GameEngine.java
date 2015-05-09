@@ -47,7 +47,7 @@ public class GameEngine {
 
 		GameTier.isRunning = true; //should it be here?
 		System.out.println(gameWindow.getInGamePanel().getWidth() + ".." + gameWindow.getInGamePanel().getHeight() + ".." + this.numberOfEnemies);
-		this.randomLocations = new RandomLocation(gameWindow.getInGamePanel().getWidth(), gameWindow.getInGamePanel().getHeight(), 50*this.numberOfEnemies);
+		this.randomLocations = new RandomLocation(gameWindow.getInGamePanel().getWidth(), gameWindow.getInGamePanel().getHeight(), this.numberOfEnemies);
 		
 		this.spawnEnemies(this.numberOfEnemies);
 	}
