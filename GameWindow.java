@@ -121,6 +121,10 @@ public class GameWindow extends JFrame {
 			this.player = player;
 		}
 
+		public void stop() {
+			this.player = null;
+		}
+
 		public void setGameObjects(ArrayList<AbstractGameObject> gameObjects) {
 			this.gameObjects = gameObjects;
 		}
@@ -132,16 +136,20 @@ public class GameWindow extends JFrame {
 		public void keyPressed(KeyEvent keyEvent) {
 			if (keyEvent.getKeyCode() == KeyEvent.VK_ESCAPE) {
 				System.exit(0);
-			} else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
-				player.shoot();
-			} else {
-				player.movementKeyPressed(keyEvent);
-			}
+			} else if (GameTier.isRunning()) {
+				if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
+					player.shoot();
+				} else {
+					player.movementKeyPressed(keyEvent);
+				}
+			} 
 		}
 
 		@Override
 		public void keyReleased(KeyEvent keyEvent) {
-			player.movementKeyReleased(keyEvent);
+			if (GameTier.isRunning()) {
+				player.movementKeyReleased(keyEvent);
+			}
 		}
 
 		@Override
@@ -150,7 +158,9 @@ public class GameWindow extends JFrame {
 
 		@Override
 		public void mouseClicked(MouseEvent me) {
-			player.shoot();
+			if (GameTier.isRunning()) {
+				player.shoot();
+			}
 		}
 
 		@Override

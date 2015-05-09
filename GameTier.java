@@ -15,6 +15,7 @@ public class GameTier {
 	public static GameWindow gameWindow;
 	public static String imagesFolder = "images/";
 	//public static PlayerShip player;
+	public static boolean isRunning;
 	
 	public static void main(String[] args) {
 		//concrete safe structure?
@@ -52,12 +53,18 @@ public class GameTier {
 		gameEngine.addGameObject(sh);
 		gameEngine.addGameObject(es);
 
+		isRunning = true;
 		int interval = 17;
 		//ActionListener gameLoop = (ActionEvent ae) -> { gameEngine.update(); gameWindow.repaint(); };
 		ActionListener gameLoop = new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				gameEngine.update();
-				gameWindow.repaint();
+				if (isRunning) {
+					long started = System.currentTimeMillis();
+					gameEngine.update();
+					gameWindow.repaint();
+					long ended = System.currentTimeMillis();
+					//System.out.println(ended-started);
+				}
 			}
 		};
 		Timer timer = new Timer(interval, gameLoop);
@@ -70,6 +77,14 @@ public class GameTier {
 		}
 */
 	}
+
+	public static void stop() {
+		isRunning = false;
+	}
+
+	public static boolean isRunning() {
+		return GameTier.isRunning;
+	} 
 
 	/*
 	public static void playerHereIsYourShip() {

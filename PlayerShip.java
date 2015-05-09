@@ -70,13 +70,13 @@ public class PlayerShip extends AbstractShip implements Shooter {
 
 	public void movementKeyPressed(KeyEvent keyEvent) {
 		if (keyEvent.getKeyCode() == KeyEvent.VK_W || keyEvent.getKeyCode() == KeyEvent.VK_UP) {
-			this.setYVelocity(this.getYVelocity() + 0.1);
+			this.setYVelocity(this.getYVelocity() + 1);
 		} else if (keyEvent.getKeyCode() == KeyEvent.VK_S || keyEvent.getKeyCode() == KeyEvent.VK_DOWN) {
-			this.setYVelocity(this.getYVelocity() - 0.1);
+			this.setYVelocity(this.getYVelocity() - 1);
 		} else if (keyEvent.getKeyCode() == KeyEvent.VK_D || keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
-			this.setXVelocity(this.getXVelocity() + 0.1);
+			this.setXVelocity(this.getXVelocity() + 1);
 		} else if (keyEvent.getKeyCode() == KeyEvent.VK_A || keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
-			this.setXVelocity(this.getXVelocity() - 0.1);
+			this.setXVelocity(this.getXVelocity() - 1);
 		}
 	}
 

@@ -14,6 +14,7 @@ public class GameEngine {
 	private ArrayList<AbstractGameObject> friendlyGameObjects;
 	private ArrayList<AbstractGameObject> hostileGameObjects;
 	private ArrayList<AbstractGameObject> deadGameObjects;
+	private ArrayList<Shooter> shooters;
 	public GameWindow gameWindow;
 	//must insure gameWindow is created first
 
@@ -26,6 +27,7 @@ public class GameEngine {
 		this.friendlyGameObjects = new ArrayList<>(25);
 		this.hostileGameObjects = new ArrayList<>(25);
 		this.deadGameObjects = new ArrayList<>(25);
+		this.shooters = new ArrayList<>(25);
 		player = new PlayerShip();
 		this.addGameObject(player);
 		//this.setPlayer(player);
@@ -53,12 +55,16 @@ public class GameEngine {
 		if (gameObject instanceof PlayerShip) {
 			this.player = (PlayerShip)gameObject;
 			this.notifyWindowOfPlayer();
+		} else if (gameObject instanceof Shooter) {
+			this.shooters.add((Shooter)gameObject);
 		}
+
 		if (isFriendly(gameObject)) {
 			this.friendlyGameObjects.add(gameObject);
 		} else {
 			this.hostileGameObjects.add(gameObject);
 		}
+
 		this.gameObjects.add(gameObject);
 		this.notifyObjectOfWindow(gameObject);
 		//System.out.println("Object adding: " + gameObject);
@@ -79,6 +85,11 @@ public class GameEngine {
 	}
 
 	public void update() {
+		//shoot em
+		for (Shooter shooter : shooters) {
+			shooter.shoot();
+		}
+
 		//move em
 		for (AbstractGameObject gameObject : gameObjects) {
 			gameObject.move();
@@ -107,10 +118,10 @@ public class GameEngine {
 
 		for (AbstractGameObject friendly : friendlyGameObjects) {
 			for (AbstractGameObject hostile : hostileGameObjects) {
-				System.out.println(areIntersecting(friendly, hostile));
+				//System.out.println(areIntersecting(friendly, hostile));
 				//bounds always at 0 0 so intersect
-				System.out.println(" F: " + friendly.getXPosition() + ".." + friendly.getYPosition() + ".. " + friendly.getImage().getData().getBounds());
-				System.out.println(" H: " + hostile.getXPosition() + ".." + hostile.getYPosition() + ".. " + hostile.getImage().getData().getBounds());
+				//System.out.println(" F: " + friendly.getXPosition() + ".." + friendly.getYPosition() + ".. " + friendly.getImage().getData().getBounds());
+				//System.out.println(" H: " + hostile.getXPosition() + ".." + hostile.getYPosition() + ".. " + hostile.getImage().getData().getBounds());
 				if (areIntersecting(friendly, hostile)) {
 					friendly.gotHit();
 					hostile.gotHit();
@@ -134,13 +145,31 @@ public class GameEngine {
 
 			//pull out isFriendly, make who is watching easier
 
+
 			this.gameObjects.remove(deadObject);
 			if (isFriendly(deadObject)) {
 				this.friendlyGameObjects.remove(deadObject);
 			} else {
 				this.hostileGameObjects.remove(deadObject);
 			}
+
+			if (deadObject instanceof Shooter) {
+				this.shooters.remove(deadObject);
+			}
+			
+			if (deadObject instanceof PlayerShip || (gameObjects.size() == 1 & gameObjects.get(0) instanceof PlayerShip)) {
+				GameTier.stop();
+				this.player = null;
+				//this.gameWindow.getInGamePanel().freeze();
+				this.gameWindow.getInGamePanel().stop();
+
+				friendlyGameObjects.clear();
+				hostileGameObjects.clear();
+				shooters.clear();
+			}
 		}
+
+		deadGameObjects.clear();
 	}
 
 	private static boolean isFriendly(AbstractGameObject gameObject) {

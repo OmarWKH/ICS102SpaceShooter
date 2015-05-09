@@ -3,7 +3,7 @@ public class ShooterEnemyShip extends AbstractEnemyShip implements Shooter {
 	private static String imageLocation = GameTier.imagesFolder + "PlayerShip.png";
 	private static double xVelocity = 1;
 	private static double yVelocity = 1;
-	private static long coolDownTime = 500;
+	private static long coolDownTime = 2000;
 	private long lastShotTime;
 
 	public ShooterEnemyShip(AbstractGameObject target) {
