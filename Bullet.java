@@ -2,11 +2,11 @@ import javax.swing.JPanel;
 
 public class Bullet extends AbstractGameObject {
 	private Shooter shooter;
-	private static double xVelocity = 5;
-	private static double yVelocity = 5;
-	private static String imageLocation = GameTier.imagesFolder + "Bullet.png";
+	public static double xVelocity; // = 5;
+	public static double yVelocity; // = 5;
+	public static String imageLocation; // = GameTier.imagesFolder + "Bullet.png";
 	//if all of them need to set it, abstractr method or force constructor
-	private static int healthPoints = 1;
+	public static int healthPoints; // = 1;
 
 	public Bullet(Shooter shooter) {
 		super(Bullet.healthPoints, Bullet.imageLocation);

@@ -2,6 +2,7 @@
 import java.util.ArrayList;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Random;
 
 public class GameEngine {
 	//this is dangerous terretory
@@ -15,27 +16,40 @@ public class GameEngine {
 	private ArrayList<AbstractGameObject> hostileGameObjects;
 	private ArrayList<AbstractGameObject> deadGameObjects;
 	private ArrayList<Shooter> shooters;
+	//doesn't seem right, static not static, consistency
 	public GameWindow gameWindow;
+	private RandomLocation randomLocations;
+	private int numberOfEnemies;
 	//must insure gameWindow is created first
 
 	//engine is acting as a "tier"
 	//forces gamewindow to be created first
-	public GameEngine(GameWindow gameWindow) {
+	public GameEngine(GameWindow gameWindow, int numberOfEnemies) {
 		//GameEngine.current = this;
 		this.gameWindow = gameWindow;
-		this.gameObjects = new ArrayList<>(50);
-		this.friendlyGameObjects = new ArrayList<>(25);
-		this.hostileGameObjects = new ArrayList<>(25);
-		this.deadGameObjects = new ArrayList<>(25);
-		this.shooters = new ArrayList<>(25);
+		this.numberOfEnemies = numberOfEnemies;
+
+		//enemies*(arbitrary bullets) + player(itself+arbitrary bullets);
+		int estimatedNumberOfObjects = this.numberOfEnemies*5 + 1*(10+1);
+		this.gameObjects = new ArrayList<>(estimatedNumberOfObjects);
+		this.friendlyGameObjects = new ArrayList<>(estimatedNumberOfObjects/2);
+		this.hostileGameObjects = new ArrayList<>(estimatedNumberOfObjects/2);
+		this.deadGameObjects = new ArrayList<>(estimatedNumberOfObjects);
+		//half the enemies and a player
+		int estimatedNumberOfShooters = this.numberOfEnemies/2 + 1;
+		this.shooters = new ArrayList<>(estimatedNumberOfShooters);
 		player = new PlayerShip();
 		this.addGameObject(player);
 		//this.setPlayer(player);
 		this.notifyWindowOfObjects();
-	}
 
-	public GameEngine() {
-		this(null);
+
+
+		GameTier.isRunning = true; //should it be here?
+		System.out.println(gameWindow.getInGamePanel().getWidth() + ".." + gameWindow.getInGamePanel().getHeight() + ".." + this.numberOfEnemies);
+		this.randomLocations = new RandomLocation(gameWindow.getInGamePanel().getWidth(), gameWindow.getInGamePanel().getHeight(), 50*this.numberOfEnemies);
+		
+		this.spawnEnemies(this.numberOfEnemies);
 	}
 
 	/*
@@ -68,8 +82,8 @@ public class GameEngine {
 		this.gameObjects.add(gameObject);
 		this.notifyObjectOfWindow(gameObject);
 		//System.out.println("Object adding: " + gameObject);
-		System.out.println("Game Objects Count: " + gameObjects.size());
-		System.out.println(gameObjects);
+		//System.out.println("Game Objects Count: " + gameObjects.size());
+		//System.out.println(gameObjects);
 	}
 
 	public ArrayList<AbstractGameObject> getGameObjects() {
@@ -82,6 +96,20 @@ public class GameEngine {
 
 	public void addBullet(Shooter shooter) {
 		this.addGameObject(new Bullet(shooter));
+	}
+
+	private void spawnEnemies(int numberOfSpawns) {
+		Random coin = new Random();
+		for (int i = 0; i < numberOfEnemies; i++) {
+			int enemyType = coin.nextInt(2);
+			Point2D.Double location = this.getRandomLocation();
+			System.out.println(location);
+			if (enemyType == 0) { //static enemy type, proper name
+				addGameObject(new FollowerEnemyShip(player, location));
+			} else if (enemyType == 1) {
+				addGameObject(new ShooterEnemyShip(player, location));
+			}
+		}
 	}
 
 	public void update() {
@@ -197,7 +225,7 @@ public class GameEngine {
 		//System.out.println("Notify object of window: " + gameObject.getXPosition());
 	}
 
-	public static Point2D.Double getRandomLocation() {
-		return new Point2D.Double(50, 50);
+	private Point2D.Double getRandomLocation() {
+		return randomLocations.next();
 	}
 }

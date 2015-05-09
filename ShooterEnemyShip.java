@@ -1,21 +1,28 @@
+import java.awt.geom.Point2D;
+
 public class ShooterEnemyShip extends AbstractEnemyShip implements Shooter {
-	private static int healthPoints = 1;
-	private static String imageLocation = GameTier.imagesFolder + "PlayerShip.png";
-	private static double xVelocity = 1;
-	private static double yVelocity = 1;
-	private static long coolDownTime = 2000;
+	public static int healthPoints = 1;
+	public static String imageLocation = GameTier.imagesFolder + "PlayerShip.png";
+	public static double xVelocity = 1;
+	public static double yVelocity = 1;
+	public static long coolDownTime = 2000;
 	private long lastShotTime;
 
-	public ShooterEnemyShip(AbstractGameObject target) {
-		this(ShooterEnemyShip.healthPoints, ShooterEnemyShip.imageLocation, target);
+	public ShooterEnemyShip(AbstractGameObject target, Point2D.Double location) {
+		this(ShooterEnemyShip.healthPoints, ShooterEnemyShip.imageLocation, target, location);
 	}
-
+/*
 	public ShooterEnemyShip(String imageLocation, AbstractGameObject target) {
 		this(ShooterEnemyShip.healthPoints, imageLocation, target);
 	}
 
 	public ShooterEnemyShip(int healthPoints, String imageLocation, AbstractGameObject target) {
 		super(healthPoints, imageLocation, target);
+	}
+*/
+	public ShooterEnemyShip(int healthPoints, String imageLocation, AbstractGameObject target, Point2D.Double location) {
+		super(healthPoints, imageLocation, target, location);
+		this.lastShotTime = System.currentTimeMillis();
 	}
 
 	//could pull out to ship?
@@ -24,7 +31,7 @@ public class ShooterEnemyShip extends AbstractEnemyShip implements Shooter {
 			GameTier.gameEngine.addBullet(this);
 			lastShotTime = System.currentTimeMillis();
 		} else {
-			System.out.println("Player cooling down");
+			//System.out.println("Enemy cooling down: " + this);
 		}
 	}
 
@@ -32,10 +39,5 @@ public class ShooterEnemyShip extends AbstractEnemyShip implements Shooter {
 		return (System.currentTimeMillis() - lastShotTime >= ShooterEnemyShip.coolDownTime);
 	}
 
-	public void movePosition() {
-		//ughh, such bad usage of this stuff :P
-
-		//this.shoot();
-
-	}; //I stay put
+	public void movePosition() {}; //I stay put
 }

@@ -17,7 +17,7 @@ public abstract class AbstractGameObject implements GameObject {
 	private double xDirection;
 	private double yDirection;
 	//even if static, a method to initlize it would make it less, hardcody
-	public static JPanel panel = GameTier.gameWindow.getInGamePanel();
+	public static JPanel panel; // = GameTier.gameWindow.getInGamePanel();
 	private BufferedImage image;
 	private AffineTransform affineTransform;
 	private int helathPoints;

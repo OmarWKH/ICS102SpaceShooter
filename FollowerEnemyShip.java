@@ -1,19 +1,25 @@
+import java.awt.geom.Point2D;
+
 public class FollowerEnemyShip extends AbstractEnemyShip {
-	private static int healthPoints = 1;
-	private static String imageLocation = GameTier.imagesFolder + "PlayerShip.png";
-	private static double xVelocity = 1;
-	private static double yVelocity = 1;
+	public static int healthPoints; // = 1;
+	public static String imageLocation; // = GameTier.imagesFolder + "PlayerShip.png";
+	public static double xVelocity; // = 1;
+	public static double yVelocity; // = 1;
 
-	public FollowerEnemyShip(AbstractGameObject target) {
-		this(FollowerEnemyShip.healthPoints, FollowerEnemyShip.imageLocation, target);
+	public FollowerEnemyShip(AbstractGameObject target, Point2D.Double location) {
+		this(FollowerEnemyShip.healthPoints, FollowerEnemyShip.imageLocation, target, location);
 	}
-
+/*
 	public FollowerEnemyShip(String imageLocation, AbstractGameObject target) {
 		this(FollowerEnemyShip.healthPoints, imageLocation, target);
 	}
 
 	public FollowerEnemyShip(int healthPoints, String imageLocation, AbstractGameObject target) {
-		super(healthPoints, imageLocation, target);
+		this(healthPoints, imageLocation, target);
+	}
+*/
+	public FollowerEnemyShip(int healthPoints, String imageLocation, AbstractGameObject target, Point2D.Double location) {
+		super(healthPoints, imageLocation, target, location);
 	}
 
 	public void movePosition() {

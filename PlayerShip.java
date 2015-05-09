@@ -11,9 +11,13 @@ import java.awt.Point;
 public class PlayerShip extends AbstractShip implements Shooter {
 	//float
 	//private JPanel panel;
-	private static String imageLocation = GameTier.imagesFolder + "PlayerShip.png";
-	private static int healthPoints = 3;
-	private static long coolDownTime = 500;
+	public static String imageLocation = GameTier.imagesFolder + "PlayerShip.png";
+	public static long coolDownTime = 500;
+	public static double xAcceleration;
+	public static double yAcceleration;
+	public static double maxXVelocity;
+	public static double maxYVelocity;
+	public static int healthPoints = 3;
 	private long lastShotTime;
 
 	public PlayerShip() {
@@ -69,14 +73,27 @@ public class PlayerShip extends AbstractShip implements Shooter {
 
 
 	public void movementKeyPressed(KeyEvent keyEvent) {
+		boolean atMaxXVelocity = Math.abs(this.getXVelocity()) >= PlayerShip.maxXVelocity;
+		boolean atMaxYVelocity = Math.abs(this.getYVelocity()) >= PlayerShip.maxYVelocity;
+
+		System.out.println(atMaxXVelocity + ".." + atMaxYVelocity);
+
 		if (keyEvent.getKeyCode() == KeyEvent.VK_W || keyEvent.getKeyCode() == KeyEvent.VK_UP) {
-			this.setYVelocity(this.getYVelocity() + 1);
+			if (!atMaxYVelocity) {
+				this.setYVelocity(this.getYVelocity() + PlayerShip.yAcceleration);
+			}
 		} else if (keyEvent.getKeyCode() == KeyEvent.VK_S || keyEvent.getKeyCode() == KeyEvent.VK_DOWN) {
-			this.setYVelocity(this.getYVelocity() - 1);
+			if (!atMaxYVelocity) {
+				this.setYVelocity(this.getYVelocity() - PlayerShip.yAcceleration);
+			}
 		} else if (keyEvent.getKeyCode() == KeyEvent.VK_D || keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
-			this.setXVelocity(this.getXVelocity() + 1);
+			if (!atMaxXVelocity) {
+				this.setXVelocity(this.getXVelocity() + PlayerShip.xAcceleration);
+			}
 		} else if (keyEvent.getKeyCode() == KeyEvent.VK_A || keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
-			this.setXVelocity(this.getXVelocity() - 1);
+			if (!atMaxXVelocity) {
+				this.setXVelocity(this.getXVelocity() - PlayerShip.xAcceleration);
+			}
 		}
 	}
 
@@ -98,7 +115,7 @@ public class PlayerShip extends AbstractShip implements Shooter {
 			GameTier.gameEngine.addBullet(this);
 			lastShotTime = System.currentTimeMillis();
 		} else {
-			System.out.println("Player cooling down");
+			//System.out.println("Player cooling down");
 		}
 	}
 
