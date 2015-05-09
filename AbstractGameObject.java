@@ -33,7 +33,6 @@ public abstract class AbstractGameObject implements GameObject {
 	public AbstractGameObject() {
 		this(1, "bullet.png");
 	}
-	
 
 	//this won't work unless Directions are done in move and a image is passed
 	@Override
@@ -59,73 +58,151 @@ public abstract class AbstractGameObject implements GameObject {
 		this.moveDirection();
 	}
 
+	@Override
 	public abstract void movePosition();
+	@Override
 	public abstract void moveDirection();
 
 	//if panel is scaled location won't update accordingly
 	@Override
 	public abstract void initializeLocation();
 
+	@Override
 	public double getXPosition() {
 		return this.xPosition;
 	}
+	@Override
 	public void setXPosition(double xPosition) {
 		this.xPosition = xPosition;
 	}
 
+	@Override
 	public double getYPosition() {
 		return this.yPosition;
 	}
+	@Override
 	public void setYPosition(double yPosition) {
 		this.yPosition = yPosition;
 	}
 
+	@Override
+	public Point2D.Double getPosition() {
+		return new Point2D.Double(this.getXPosition(), this.getYPosition());
+	}
+	@Override
 	public void setPosition(Point2D.Double point) {
 		this.setXPosition(point.getX());
 		this.setYPosition(point.getY());
 	}
 
+	@Override
 	public double getXVelocity() {
 		return this.xVelocity;
 	}
+	@Override
 	public void setXVelocity(double xVelocity) {
 		this.xVelocity = xVelocity;
 	}
 
+	@Override
 	public double getYVelocity() {
 		return this.yVelocity;
 	}
+	@Override
 	public void setYVelocity(double yVelocity) {
 		this.yVelocity = yVelocity;
 	}
 
+	@Override
 	public double getXDirection() {
 		return this.xDirection;
 	}
+	@Override
 	public void setXDirection(double xDirection) {
 		this.xDirection = xDirection;
 	}
 
+	@Override
 	public double getYDirection() {
 		return this.yDirection;
 	}
+	@Override
 	public void setYDirection(double yDirection) {
 		this.yDirection = yDirection;
 	}
+	//set/get (x, y)
+	//set/get (point)
+	//set/get (x),(y)
 
+	@Override
+	public void setDirection(Point2D location) {
+		this.setXDirection(location.getX());
+		this.setYDirection(location.getY());
+	}
+	@Override
+	public Point2D.Double getDirection() {
+		return new Point2D.Double(this.getXDirection(), this.getYDirection());
+	}
+
+	@Override
+	public void setDirectionToward(Point2D location) {
+		Point2D.Double unitVector = normalize(location, this.getCenter());
+		this.setDirection(unitVector);
+		//this.setXDirection(target.getXCenter() - this.getXCenter());
+		//this.setYDirection(target.getYCenter() + this.getYCenter());
+	}
+
+	@Override
+	public double getWidth() {
+		return this.getImage().getWidth();
+	}
+
+	@Override
+	public double getHeight() {
+		return this.getImage().getHeight();
+	}
+
+	@Override
 	public double getXCenter() {
-		return this.getXPosition() + this.getImage().getWidth()/2;
+		return this.getXPosition() + this.getWidth()/2;
 	}
+	@Override
 	public double getYCenter() {
-		return this.getYPosition() + this.getImage().getHeight()/2;
+		return this.getYPosition() + this.getHeight()/2;
+	}
+	@Override
+	public Point2D.Double getCenter() {
+		return new Point2D.Double(this.getXCenter(), this.getYCenter());
 	}
 
+	@Override
+	public void gotHit() {
+		this.setHealthPoints(this.getHealthPoints() - 1);
+		if (isDead()) {
+			GameTier.gameEngine.manDown(this);
+		}
+	}
+
+	@Override
+	public boolean isDead() {
+		return (getHealthPoints() <= 0);
+	}
+
+	@Override
+	public void makeDead() {
+		this.setHealthPoints(-1);
+		this.gotHit();
+	}
+
+	@Override
 	public BufferedImage getImage() {
 		return this.image;
 	}
+	@Override
 	public void setImage(BufferedImage image) {
 		this.image = image;
 	}
+	@Override
 	public void setImageLocation(String imageLocation) {
 		try {
 			image = ImageIO.read(new File(imageLocation));
@@ -136,10 +213,19 @@ public abstract class AbstractGameObject implements GameObject {
 		}
 	}
 
+	@Override
 	public int getHealthPoints() {
 		return this.helathPoints;
 	}
+	@Override
 	public void setHealthPoints(int helathPoints) {
 		this.helathPoints = helathPoints;
+	}
+
+	private static Point2D.Double normalize(Point2D location1, Point2D location2) {
+		double xComponent = (location1.getX() - location2.getX());
+		double yComponent = (location1.getY() - location2.getY());
+		double length = Math.sqrt( Math.pow(xComponent,2) + Math.pow(yComponent,2) );
+		return new Point2D.Double(xComponent/length, yComponent/length);
 	}
 }

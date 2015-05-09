@@ -10,6 +10,7 @@ public abstract class AbstractShip extends AbstractGameObject {
 		double newXPosition = this.getXPosition() + this.getXVelocity();
 		double newYPosition = this.getYPosition() - this.getYVelocity();
 		
+		//follower gets stuck
 		if (this.getXCenter() > panel.getWidth()) {
 			this.setXPosition(newXPosition - panel.getWidth());
 		} else if (this.getXCenter() < 0) {
@@ -25,9 +26,6 @@ public abstract class AbstractShip extends AbstractGameObject {
 			this.setYPosition(newYPosition + panel.getHeight());
 		} else {
 			this.setYPosition(newYPosition);
-		}
-		if (this instanceof AbstractEnemyShip) {
-			//System.out.println(this.getXPosition() + ".." + this.getYPosition() + ".." + this.getXVelocity() + ".." + this.getXVelocity());
 		}
 	}
 

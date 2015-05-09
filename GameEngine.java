@@ -1,5 +1,7 @@
+//could change to list
 import java.util.ArrayList;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 public class GameEngine {
 	//this is dangerous terretory
@@ -9,6 +11,9 @@ public class GameEngine {
 	//private static GameEngine current;
 	private PlayerShip player;
 	private ArrayList<AbstractGameObject> gameObjects;
+	private ArrayList<AbstractGameObject> friendlyGameObjects;
+	private ArrayList<AbstractGameObject> hostileGameObjects;
+	private ArrayList<AbstractGameObject> deadGameObjects;
 	public GameWindow gameWindow;
 	//must insure gameWindow is created first
 
@@ -17,7 +22,10 @@ public class GameEngine {
 	public GameEngine(GameWindow gameWindow) {
 		//GameEngine.current = this;
 		this.gameWindow = gameWindow;
-		this.gameObjects = new ArrayList<>();
+		this.gameObjects = new ArrayList<>(50);
+		this.friendlyGameObjects = new ArrayList<>(25);
+		this.hostileGameObjects = new ArrayList<>(25);
+		this.deadGameObjects = new ArrayList<>(25);
 		player = new PlayerShip();
 		this.addGameObject(player);
 		//this.setPlayer(player);
@@ -46,10 +54,16 @@ public class GameEngine {
 			this.player = (PlayerShip)gameObject;
 			this.notifyWindowOfPlayer();
 		}
+		if (isFriendly(gameObject)) {
+			this.friendlyGameObjects.add(gameObject);
+		} else {
+			this.hostileGameObjects.add(gameObject);
+		}
 		this.gameObjects.add(gameObject);
 		this.notifyObjectOfWindow(gameObject);
 		//System.out.println("Object adding: " + gameObject);
 		System.out.println("Game Objects Count: " + gameObjects.size());
+		System.out.println(gameObjects);
 	}
 
 	public ArrayList<AbstractGameObject> getGameObjects() {
@@ -65,9 +79,80 @@ public class GameEngine {
 	}
 
 	public void update() {
+		//move em
 		for (AbstractGameObject gameObject : gameObjects) {
 			gameObject.move();
 		}
+
+		//detect collosion
+		this.whoIsTouchingWho();
+
+		//dispose of em
+		this.aSendOff();
+	}
+
+	private void whoIsTouchingWho() {
+		/*
+		for (int i = 0; i < gameObjects.size(); i++) {
+			for (int j = i+1; j < gameObjects.size(); j++) {
+				boolean isFriendly = !(gameObjects.get(i) instanceof AbstractEnemyShip) && 
+			}
+		}
+
+		for (AbstractGameObject gameObject : gameObjects) {
+			for (AbstractGameObject gameObject)
+			boolean isFriendly = !()
+		}
+		*/
+
+		for (AbstractGameObject friendly : friendlyGameObjects) {
+			for (AbstractGameObject hostile : hostileGameObjects) {
+				System.out.println(areIntersecting(friendly, hostile));
+				//bounds always at 0 0 so intersect
+				System.out.println(" F: " + friendly.getXPosition() + ".." + friendly.getYPosition() + ".. " + friendly.getImage().getData().getBounds());
+				System.out.println(" H: " + hostile.getXPosition() + ".." + hostile.getYPosition() + ".. " + hostile.getImage().getData().getBounds());
+				if (areIntersecting(friendly, hostile)) {
+					friendly.gotHit();
+					hostile.gotHit();
+				}
+			}
+		}
+	}
+
+	//check perfectness
+	private static boolean areIntersecting(AbstractGameObject first, AbstractGameObject second) {
+		Rectangle2D.Double firstRectangle = new Rectangle2D.Double(first.getXPosition(), first.getYPosition(), first.getWidth(), first.getWidth());
+		Rectangle2D.Double secondRectangle = new Rectangle2D.Double(second.getXPosition(), second.getYPosition(), second.getWidth(), second.getWidth());
+		return firstRectangle.intersects(secondRectangle);
+	}
+
+	private void aSendOff() {
+		for (AbstractGameObject deadObject : deadGameObjects) {
+			//could make it null
+			//could remove from all lists
+			//could make it one list and check in whoIsTouchingWho
+
+			//pull out isFriendly, make who is watching easier
+
+			this.gameObjects.remove(deadObject);
+			if (isFriendly(deadObject)) {
+				this.friendlyGameObjects.remove(deadObject);
+			} else {
+				this.hostileGameObjects.remove(deadObject);
+			}
+		}
+	}
+
+	private static boolean isFriendly(AbstractGameObject gameObject) {
+		boolean isFriendlyIfBullet = true;
+		if (gameObject instanceof Bullet) {
+			isFriendlyIfBullet = !( ((Bullet)gameObject).getShooter() instanceof AbstractEnemyShip );
+		}
+		return !(gameObject instanceof AbstractEnemyShip) && isFriendlyIfBullet;
+	}
+
+	public void manDown(AbstractGameObject deadObject) {
+		this.deadGameObjects.add(deadObject);
 	}
 
 	public void notifyWindowOfObjects() {

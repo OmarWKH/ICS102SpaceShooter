@@ -6,13 +6,14 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.event.ActionEvent;
 import java.awt.MouseInfo;
+import java.awt.Point;
 
 public class PlayerShip extends AbstractShip implements Shooter {
 	//float
 	//private JPanel panel;
 	private static String imageLocation = GameTier.imagesFolder + "PlayerShip.png";
 	private static int healthPoints = 3;
-	private static long coolDownTime = 500; 
+	private static long coolDownTime = 500;
 	private long lastShotTime;
 
 	public PlayerShip() {
@@ -54,16 +55,19 @@ public class PlayerShip extends AbstractShip implements Shooter {
 	@Override
 	public void moveDirection() {
 		//center is a little off
-		double dX = (MouseInfo.getPointerInfo().getLocation().getX() - getXCenter());
-		double dY = (MouseInfo.getPointerInfo().getLocation().getY() - getYCenter());
-		double l = Math.sqrt(Math.pow(dX,2)+Math.pow(dY,2));
 		//this.setXDirection(MouseInfo.getPointerInfo().getLocation().getX() - getXCenter());
 		//this.setYDirection(MouseInfo.getPointerInfo().getLocation().getY() - getYCenter());
+		/*double dX = (MouseInfo.getPointerInfo().getLocation().getX() - getXCenter());
+		double dY = (MouseInfo.getPointerInfo().getLocation().getY() - getYCenter());
+		double l = Math.sqrt(Math.pow(dX,2)+Math.pow(dY,2));
 		this.setXDirection(dX/l);
-		this.setYDirection(dY/l);
+		this.setYDirection(dY/l);*/
+		Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
+		//Point2D.Double mouseLocationDouble = new Point2D.Double(mouseLocation.getX(), mouseLocation.getY());
+		this.setDirectionToward(mouseLocation);
 	}
 
-	
+
 	public void movementKeyPressed(KeyEvent keyEvent) {
 		if (keyEvent.getKeyCode() == KeyEvent.VK_W || keyEvent.getKeyCode() == KeyEvent.VK_UP) {
 			this.setYVelocity(this.getYVelocity() + 0.1);

@@ -20,12 +20,37 @@ public class GameTier {
 		//concrete safe structure?
 		gameWindow = new GameWindow();
 		gameEngine = new GameEngine(gameWindow);
+
+		/*
+		AbstractGameObject.panel = GameTier.gameWindow.getInGamePanel();
+		FollowerEnemyShip.healthPoints = 1;
+		FollowerEnemyShip.imageLocation = GameTier.imagesFolder + "PlayerShip.png";
+		FollowerEnemyShip.xVelocity = 0.1;
+		FollowerEnemyShip.yVelocity = 0.1;
+		Bullet.xVelocity = 5;
+		Bullet.yVelocity = 5;
+		Bullet.imageLocation = GameTier.imagesFolder + "Bullet.png";
+		//if all of them need to set it, abstractr method or force constructor
+		Bullet.healthPoints = 1;
+		PlayerShip.imageLocation = GameTier.imagesFolder + "PlayerShip.png";
+		PlayerShip.healthPoints = 3;
+		PlayerShip.coolDownTime = 500;
+		ShooterEnemyShip.healthPoints = 1;
+		ShooterEnemyShip.imageLocation = GameTier.imagesFolder + "PlayerShip.png";
+		ShooterEnemyShip.xVelocity = 1;
+		ShooterEnemyShip.yVelocity = 1;
+		ShooterEnemyShip.coolDownTime = 500;
+		ShooterEnemyShip.lastShotTime;
+		*/
+
 		//gameWindow.setVisible(true);
 		//PlayerShip player = new PlayerShip();
 		//engine.addGameObject(player);
 
 		FollowerEnemyShip sh = new FollowerEnemyShip(gameEngine.getPlayer());
+		ShooterEnemyShip es = new ShooterEnemyShip(gameEngine.getPlayer());
 		gameEngine.addGameObject(sh);
+		gameEngine.addGameObject(es);
 
 		int interval = 17;
 		//ActionListener gameLoop = (ActionEvent ae) -> { gameEngine.update(); gameWindow.repaint(); };

@@ -1,8 +1,8 @@
 public class FollowerEnemyShip extends AbstractEnemyShip {
 	private static int healthPoints = 1;
 	private static String imageLocation = GameTier.imagesFolder + "PlayerShip.png";
-	private static double xVelocity = 0.1;
-	private static double yVelocity = 0.1;
+	private static double xVelocity = 1;
+	private static double yVelocity = 1;
 
 	public FollowerEnemyShip(AbstractGameObject target) {
 		this(FollowerEnemyShip.healthPoints, FollowerEnemyShip.imageLocation, target);
@@ -14,16 +14,14 @@ public class FollowerEnemyShip extends AbstractEnemyShip {
 
 	public FollowerEnemyShip(int healthPoints, String imageLocation, AbstractGameObject target) {
 		super(healthPoints, imageLocation, target);
-		//this.setXVelocity(FollowerEnemyShip.shipXVelocity);
-		//this.setYVelocity(FollowerEnemyShip.shipYVelocity);
 	}
 
-	private boolean something = true;
 	public void movePosition() {
 		//this.setXPosition(this.getXPosition() + this.getXDirection()*this.getXVelocity());
 		//this.setYPosition(this.getYPosition() + this.getYDirection()*this.getYVelocity());
-		this.setXVelocity(this.getXDirection()*FollowerEnemyShip.xVelocity);
-		this.setYVelocity(this.getYDirection()*FollowerEnemyShip.yVelocity);
+		//v*d pull out?
+		this.setXVelocity(FollowerEnemyShip.xVelocity * this.getXDirection());
+		this.setYVelocity(FollowerEnemyShip.yVelocity * -1 *this.getYDirection());
 		super.movePosition();
 		//force to call super?
 		//change velocity, this will make velocity increase
