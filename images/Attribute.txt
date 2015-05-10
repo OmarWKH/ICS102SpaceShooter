@@ -17,3 +17,8 @@ Background:
  http://opengameart.org/content/space-parallax-background
  scorcher24
  Public Domain CC0
+
+Background:
+ http://opengameart.org/content/space-backdrop
+ beren77
+ Public Domain CC0

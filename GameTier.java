@@ -16,20 +16,16 @@ public class GameTier {
 	//public static PlayerShip player;
 	public static int numberOfEnemies;
 	public static String imagesFolder;
-	
+	public static boolean isRunning;
 	
 	public static void main(String[] args) {
 		//concrete safe structure?
 
 		imagesFolder = "images/";
-		initializeGamePlayValues();
+		GameWindow.backgroundLocation = GameTier.imagesFolder + "newbackgroundsmallpng.png";
 		
 		gameWindow = new GameWindow();
-		AbstractGameObject.panel = GameTier.gameWindow.getInGamePanel(); //norifyObjectOfWindow //gameEngine
 
-
-
-		startGame();
 		/*
 		//stariting operations
 
@@ -56,67 +52,82 @@ public class GameTier {
 */
 	}
 
-	public static void initializeGamePlayValues() {
-		numberOfEnemies = 5;
-		
-		GameWindow.backgroundLocation = GameTier.imagesFolder + "BackdropBlackLittleSparkBlack.png";
-		Bullet.imageLocation = GameTier.imagesFolder + "Bullet.png";
-		FollowerEnemyShip.imageLocation = GameTier.imagesFolder + "PlayerShip.png";
-		PlayerShip.imageLocation = GameTier.imagesFolder + "PlayerShip.png";
-		ShooterEnemyShip.imageLocation = GameTier.imagesFolder + "PlayerShip.png";
+	public static void startGame(String difficulty, String mode) {
+		GameTier.isRunning = true;
 
-		Bullet.xVelocity = 5;
-		Bullet.yVelocity = 5;
-		FollowerEnemyShip.xVelocity = 0.5;
-		FollowerEnemyShip.yVelocity = 0.5;
-		ShooterEnemyShip.xVelocity = 1;
-		ShooterEnemyShip.yVelocity = 1;
-		
-		PlayerShip.xAcceleration = 1;
-		PlayerShip.yAcceleration = 1;
-		PlayerShip.maxXVelocity = 4;
-		PlayerShip.maxYVelocity = 4;
-		
-		Bullet.healthPoints = 1;
-		FollowerEnemyShip.healthPoints = 1;
-		PlayerShip.healthPoints = 3;
-		ShooterEnemyShip.healthPoints = 1;
+		switch (difficulty) {
+			case "Normal": 	initializeGamePlayValues(5, 3, 1, 0.5, 500, 2000);
+							break;
+			case "Hard":	initializeGamePlayValues(5, 5, 5, 0.7, 500, 1000);
+							break;
+			default:		initializeGamePlayValues(5, 3, 1, 0.5, 500, 2000);
+							break;
+		}
 
-		PlayerShip.coolDownTime = 500;
-		ShooterEnemyShip.coolDownTime = 2000;
-	}
+		//menu
 
-	public static void startGame() {
-		gameEngine = new GameEngine(gameWindow, numberOfEnemies);
+		gameEngine = new GameEngine(gameWindow, numberOfEnemies, mode);
+
 		int interval = 17;
 		//ActionListener gameLoop = (ActionEvent ae) -> { gameEngine.update(); gameWindow.repaint(); };
 		ActionListener gameLoop = new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				//long started = System.currentTimeMillis();
-				gameEngine.update();
-				gameWindow.repaint();
-				//long ended = System.currentTimeMillis();
-				//System.out.println(ended-started);
-				int gameCondition = gameEngine.checkEndCondition();
+				//if (true) {
+					//long started = System.currentTimeMillis();
+					gameEngine.update();
+					gameWindow.repaint();
+					//long ended = System.currentTimeMillis();
+					//System.out.println(ended-started);
+					int gameCondition = gameEngine.checkEndCondition();
 
-				if (gameCondition != GameEngine.STILL_GOING) {
-					gameEngine.cleanUp();
-					if (gameCondition == GameEngine.WON) {
-						//gameWindow.winState();
-					} else {
-						//gameWindow.lossState();
+					if (gameCondition != GameEngine.STILL_GOING) {
+						gameEngine.cleanUp();
+						if (gameCondition == GameEngine.WON) {
+							gameWindow.won();
+						} else {
+							gameWindow.lost();
+						}
+						gameEngine = null;
+						//GameTier.isRunning = false;
+						//return;
 					}
-					gameEngine = null;
-					return;
-				}
 
-				//if()
-					//clear (and before "setup")
+					//if()
+						//clear (and before "setup")
+				//}
 			}
 		};
 		Timer timer = new Timer(interval, gameLoop);
 		timer.setRepeats(true);
 		timer.start();
+	}
+
+	public static void initializeGamePlayValues(int numberOfEnemies, int playerHP, int enemyHP, double enemySpeed, long playerCoolDown, long enemyCoolDown) {
+		GameTier.numberOfEnemies = numberOfEnemies;
+
+		Bullet.imageLocation = GameTier.imagesFolder + "Bullet.png";
+		FollowerEnemyShip.imageLocation = GameTier.imagesFolder + "PlayerShip.png";
+		PlayerShip.imageLocation = GameTier.imagesFolder + "PlayerShip.png";
+		ShooterEnemyShip.imageLocation = GameTier.imagesFolder + "PlayerShip.png";
+
+		PlayerShip.xAcceleration = 1;
+		PlayerShip.yAcceleration = 1;
+		PlayerShip.maxXVelocity = 4;
+		PlayerShip.maxYVelocity = 4;
+
+		Bullet.xVelocity = 5;
+		Bullet.yVelocity = 5;
+		FollowerEnemyShip.xVelocity = 0.5;
+		FollowerEnemyShip.yVelocity = 0.5;
+		
+		
+		PlayerShip.healthPoints = playerHP;
+		Bullet.healthPoints = 1;
+		FollowerEnemyShip.healthPoints = enemyHP;
+		ShooterEnemyShip.healthPoints = enemyHP;
+
+		PlayerShip.coolDownTime = playerCoolDown;
+		ShooterEnemyShip.coolDownTime = enemyCoolDown;
 	}
 
 	/*

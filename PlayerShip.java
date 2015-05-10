@@ -76,8 +76,6 @@ public class PlayerShip extends AbstractShip implements Shooter {
 		boolean atMaxXVelocity = Math.abs(this.getXVelocity()) >= PlayerShip.maxXVelocity;
 		boolean atMaxYVelocity = Math.abs(this.getYVelocity()) >= PlayerShip.maxYVelocity;
 
-		System.out.println(atMaxXVelocity + ".." + atMaxYVelocity);
-
 		if (keyEvent.getKeyCode() == KeyEvent.VK_W || keyEvent.getKeyCode() == KeyEvent.VK_UP) {
 			if (!atMaxYVelocity) {
 				this.setYVelocity(this.getYVelocity() + PlayerShip.yAcceleration);

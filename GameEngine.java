@@ -4,6 +4,17 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Random;
 
+//nullpointer
+//movement
+//circles
+//enemy sprite
+//java doc
+//comments, orgnization
+//score, health
+
+//endless: health increase partially with score
+//score: number of kills
+
 public class GameEngine {
 	//this is dangerous terretory
 	//should the whole thing be static thing?
@@ -17,13 +28,14 @@ public class GameEngine {
 	private ArrayList<AbstractGameObject> deadGameObjects;
 	private ArrayList<Shooter> shooters;
 	//doesn't seem right, static not static, consistency
-	public GameWindow gameWindow;
+	public GameWindow gameWindow; //I opnly need the panel, will I do anything defined in gamePanel or only need width?
 	private RandomLocation randomLocations;
 	private int numberOfEnemies;
-	public int gameMode;
+	public String gameMode;
 	//must insure gameWindow is created first
 
-	public final static int LIMITED = 0;
+	public final static String LIMITED_MODE = "Limited";
+	public final static String ENDLESS_MODE = "Endless";
 	//public final static INFINITE = 1;
 
 	public final static int WON = 1;
@@ -33,10 +45,10 @@ public class GameEngine {
 	//engine is acting as a "tier"
 	//forces gamewindow to be created first
 	public GameEngine(GameWindow gameWindow, int numberOfEnemies) {
-		this(gameWindow, numberOfEnemies, LIMITED);
+		this(gameWindow, numberOfEnemies, LIMITED_MODE);
 	}
 
-	public GameEngine(GameWindow gameWindow, int numberOfEnemies, int gameMode) {
+	public GameEngine(GameWindow gameWindow, int numberOfEnemies, String gameMode) {
 		//infinite mode:
 		  //spawn whenever {}
 		  //player gains health if he kills, loses when health is zero
@@ -56,9 +68,11 @@ public class GameEngine {
 		int estimatedNumberOfShooters = this.numberOfEnemies/2 + 1;
 		this.shooters = new ArrayList<>(estimatedNumberOfShooters);
 		player = new PlayerShip();
-		this.addGameObject(player);
 		//this.setPlayer(player);
 		this.notifyWindowOfObjects();
+		this.notifyObjectsOfWindow();
+
+		this.addGameObject(player);
 
 		this.randomLocations = new RandomLocation(gameWindow.getInGamePanel().getWidth(), gameWindow.getInGamePanel().getHeight(), this.numberOfEnemies);
 		
@@ -93,7 +107,7 @@ public class GameEngine {
 		}
 
 		this.gameObjects.add(gameObject);
-		this.notifyObjectOfWindow(gameObject);
+		gameObject.initializeLocation();
 		//System.out.println("Object adding: " + gameObject);
 		//System.out.println("Game Objects Count: " + gameObjects.size());
 		//System.out.println(gameObjects);
@@ -212,8 +226,9 @@ public class GameEngine {
 	 */
 	public int checkEndCondition() {
 		switch (this.gameMode) {
-			case LIMITED: 	return limitedEndCondition();
-			default:		return 0;
+			case LIMITED_MODE:	return limitedEndCondition();
+			case ENDLESS_MODE:	return endlessEndCondition();
+			default:			return 0;
 		}
 	}
 
@@ -227,6 +242,15 @@ public class GameEngine {
 		} else {
 			return STILL_GOING;
 		}
+	}
+
+	private int endlessEndCondition() {
+		if (this.player == null) {
+			return LOST;
+		} else if (hostileGameObjects.size() == 1) {
+			spawnEnemies(numberOfEnemies + numberOfEnemies/3);
+		}
+		return STILL_GOING;
 	}
 
 	private static boolean isFriendly(AbstractGameObject gameObject) {
@@ -249,8 +273,8 @@ public class GameEngine {
 		this.gameWindow.setPlayer(this.getPlayer());
 	}
 
-	public void notifyObjectOfWindow(AbstractGameObject gameObject) {
-		gameObject.initializeLocation();
+	public void notifyObjectsOfWindow() {
+		AbstractGameObject.panel = GameTier.gameWindow.getInGamePanel(); //norifyObjectOfWindow //gameEngine
 		//System.out.println("Notify object of window: " + gameObject.getXPosition());
 	}
 

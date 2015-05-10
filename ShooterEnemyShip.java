@@ -4,8 +4,6 @@ import java.util.Random;
 public class ShooterEnemyShip extends AbstractEnemyShip implements Shooter {
 	public static int healthPoints = 1;
 	public static String imageLocation = GameTier.imagesFolder + "PlayerShip.png";
-	public static double xVelocity = 1;
-	public static double yVelocity = 1;
 	public static long coolDownTime = 2000;
 	private long lastShotTime;
 
