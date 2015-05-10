@@ -10,16 +10,56 @@ import java.awt.event.ActionEvent;
 */
 
 public class GameTier {
+	public static GameWindow gameWindow;
 	public static GameEngine gameEngine;
 	//if gameWindow is static, using it?
-	public static GameWindow gameWindow;
-	public static String imagesFolder = "images/";
 	//public static PlayerShip player;
-	public static boolean isRunning;
-	public static int numberOfEnemies = 5;
+	public static int numberOfEnemies;
+	public static String imagesFolder;
+	
 	
 	public static void main(String[] args) {
 		//concrete safe structure?
+
+		imagesFolder = "images/";
+		initializeGamePlayValues();
+		
+		gameWindow = new GameWindow();
+		AbstractGameObject.panel = GameTier.gameWindow.getInGamePanel(); //norifyObjectOfWindow //gameEngine
+
+
+
+		startGame();
+		/*
+		//stariting operations
+
+		//variables
+
+		//stopping operations
+
+		//force doing 'em
+
+		*/
+
+		//gameWindow.setVisible(true);
+		//PlayerShip player = new PlayerShip();
+		//engine.addGameObject(player);
+
+		//GameTier.isRunning = true;
+		
+
+/*
+		while (true) {
+			engine.update();
+			gameWindow.repaint();
+		}
+*/
+	}
+
+	public static void initializeGamePlayValues() {
+		numberOfEnemies = 5;
+		
+		GameWindow.backgroundLocation = GameTier.imagesFolder + "BackdropBlackLittleSparkBlack.png";
 		Bullet.imageLocation = GameTier.imagesFolder + "Bullet.png";
 		FollowerEnemyShip.imageLocation = GameTier.imagesFolder + "PlayerShip.png";
 		PlayerShip.imageLocation = GameTier.imagesFolder + "PlayerShip.png";
@@ -44,59 +84,40 @@ public class GameTier {
 
 		PlayerShip.coolDownTime = 500;
 		ShooterEnemyShip.coolDownTime = 2000;
+	}
 
-		gameWindow = new GameWindow();
-		AbstractGameObject.panel = GameTier.gameWindow.getInGamePanel(); //norifyObjectOfWindow //gameEngine
+	public static void startGame() {
 		gameEngine = new GameEngine(gameWindow, numberOfEnemies);
-
-
-		/*
-		//stariting operations
-
-		//variables
-
-		//stopping operations
-
-		//force doing 'em
-
-		*/
-
-		//gameWindow.setVisible(true);
-		//PlayerShip player = new PlayerShip();
-		//engine.addGameObject(player);
-
-		//GameTier.isRunning = true;
 		int interval = 17;
 		//ActionListener gameLoop = (ActionEvent ae) -> { gameEngine.update(); gameWindow.repaint(); };
 		ActionListener gameLoop = new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				if (isRunning) {
-					long started = System.currentTimeMillis();
-					gameEngine.update();
-					gameWindow.repaint();
-					long ended = System.currentTimeMillis();
-					//System.out.println(ended-started);
+				//long started = System.currentTimeMillis();
+				gameEngine.update();
+				gameWindow.repaint();
+				//long ended = System.currentTimeMillis();
+				//System.out.println(ended-started);
+				int gameCondition = gameEngine.checkEndCondition();
+
+				if (gameCondition != GameEngine.STILL_GOING) {
+					gameEngine.cleanUp();
+					if (gameCondition == GameEngine.WON) {
+						//gameWindow.winState();
+					} else {
+						//gameWindow.lossState();
+					}
+					gameEngine = null;
+					return;
 				}
+
+				//if()
+					//clear (and before "setup")
 			}
 		};
 		Timer timer = new Timer(interval, gameLoop);
 		timer.setRepeats(true);
 		timer.start();
-/*
-		while (true) {
-			engine.update();
-			gameWindow.repaint();
-		}
-*/
 	}
-
-	public static void stop() {
-		isRunning = false;
-	}
-
-	public static boolean isRunning() {
-		return GameTier.isRunning;
-	} 
 
 	/*
 	public static void playerHereIsYourShip() {

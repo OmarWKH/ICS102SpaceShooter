@@ -1,13 +1,21 @@
-import javax.swing.JPanel;
-import javax.swing.JFrame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyEvent;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.geom.AffineTransform;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
+import java.awt.CardLayout;
+import javax.swing.*;
 //import javax.swing.Action;
 //import javax.swing.AbstractAction;
 //import java.awt.event.ActionEvent;
@@ -18,15 +26,56 @@ import java.awt.Color;
   //extract variables
   //check exception prone
 
-public class GameWindow extends JFrame {
+public class GameWindow extends JFrame implements ActionListener {
+	private JPanel panel;
 	private GamePanel gamePanel;
+	public static String backgroundLocation;
+	private Image background;
+	private JButton button;
+	CardLayout cards;
 
 	public GameWindow() {
 		this.setSize(640, 480);
+		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		cards = new CardLayout();
+		this.setLayout(cards);
+
+		panel = new JPanel();
+		button = new JButton("Limited");
+		button.addActionListener(this);
+		panel.add(button);
+		this.add(panel, "Main");
+
 		this.gamePanel = new GamePanel();
-		this.add(this.gamePanel);
+		this.add(this.gamePanel, "Game");
+		this.setBackgroundLocation(backgroundLocation);
 		this.setVisible(true);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent ae) {
+		if (ae.getSource() == button) {
+			//not just card, add a last card and initiate a game and engine with certain mode
+			cards.show(this.getContentPane(), "Game");
+		}
+		//infinite:
+		//regarding health like I said before?
+		//enemies multiply (increase) each number of points
+	}
+
+	public void won() {
+		//clean up
+		//set score to show
+		//remove gamepanel
+		//show won card, which goes back to menu
+	}
+
+	public void lost() {
+		//clean up
+		//set score to show
+		//remove gamepanel
+		//show lost card, wich goes back to menu
 	}
 
 	public GamePanel getInGamePanel() {
@@ -41,6 +90,17 @@ public class GameWindow extends JFrame {
 		this.gamePanel.setPlayer(player);
 	}
 
+	public void setBackgroundLocation(String path) {
+		try {
+			BufferedImage image = ImageIO.read(new File(path));
+			background = image.getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_DEFAULT);
+		} catch (IOException ioe) {
+			System.out.println("Failed to load image at: " + backgroundLocation);
+			ioe.printStackTrace();
+			System.exit(0);
+		}
+	}
+
 /*
 	https://stackoverflow.com/questions/24802461/
 	how-to-repaint-properly-in-jpanel-inside-jframe
@@ -51,6 +111,7 @@ public class GameWindow extends JFrame {
 		//private GameEngine engine;
 		private PlayerShip player;
 		private ArrayList<AbstractGameObject> gameObjects;
+		private boolean isRunning;
 		//private sprites? array of 'em?
 
 		/*
@@ -96,6 +157,8 @@ public class GameWindow extends JFrame {
 			//player.setSprite(null);
 			this.setFocusable(true);
 			this.requestFocusInWindow();
+
+			this.isRunning = true;
 		}
 
 		//private initlize
@@ -105,13 +168,16 @@ public class GameWindow extends JFrame {
 		public void paint(Graphics g) {
 			super.paint(g);
 			Graphics2D g2d = (Graphics2D)g;
+				
+			g2d.drawImage(background, null, null);
+			
 
 			for (AbstractGameObject gameObject : gameObjects) {
 				try {
 					gameObject.draw(g2d);
-				} catch (Exception ex) {
+				} catch (NullPointerException npe) { //proper exception
 					System.out.println("Object failed painting: " + gameObject);
-					ex.printStackTrace();
+					npe.printStackTrace();
 					System.exit(0);
 				}
 			}
@@ -121,8 +187,10 @@ public class GameWindow extends JFrame {
 			this.player = player;
 		}
 
-		public void stop() {
+		public void cleanUp() {
 			this.player = null;
+			this.isRunning = false;
+			cards.show(getContentPane(), "Main");
 		}
 
 		public void setGameObjects(ArrayList<AbstractGameObject> gameObjects) {
@@ -136,7 +204,7 @@ public class GameWindow extends JFrame {
 		public void keyPressed(KeyEvent keyEvent) {
 			if (keyEvent.getKeyCode() == KeyEvent.VK_ESCAPE) {
 				System.exit(0);
-			} else if (GameTier.isRunning()) {
+			} else if (isRunning) {
 				if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
 					player.shoot();
 				} else {
@@ -147,7 +215,7 @@ public class GameWindow extends JFrame {
 
 		@Override
 		public void keyReleased(KeyEvent keyEvent) {
-			if (GameTier.isRunning()) {
+			if (isRunning) {
 				player.movementKeyReleased(keyEvent);
 			}
 		}
@@ -158,9 +226,6 @@ public class GameWindow extends JFrame {
 
 		@Override
 		public void mouseClicked(MouseEvent me) {
-			if (GameTier.isRunning()) {
-				player.shoot();
-			}
 		}
 
 		@Override
@@ -173,6 +238,9 @@ public class GameWindow extends JFrame {
 
 		@Override
 		public void mousePressed(MouseEvent me) {
+			if (isRunning) {
+				player.shoot();
+			}
 		}
 
 		@Override

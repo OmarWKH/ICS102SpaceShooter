@@ -11,32 +11,42 @@ public class RandomLocation {
 	private int numberOfLocations;
 	private int width;
 	private int height;
+	private double exludingFactor;
 
-	RandomLocation(int width, int height, int numberOfLocations) {
-		this.numberOfLocations = numberOfLocations;
+	RandomLocation(int width, int height, int numberOfLocations, double exludingFactor) {
 		this.width = width;
 		this.height = height;
+		this.numberOfLocations = numberOfLocations;
+		this.exludingFactor = exludingFactor;
 		this.populateRandomUniqueList();
 		iterator = this.locations.listIterator(0);
 	}
 
-	private void populateRandomUniqueList() {
-		double stepX = this.width/numberOfLocations;
-		double stepY = this.height/numberOfLocations;
-		this.locations = new LinkedList<>();
+	RandomLocation(int width, int height, int numberOfLocations) {
+		this(width, height, numberOfLocations, 0.05);
+	}
 
+	private void populateRandomUniqueList() {
+		double minX = exludingFactor*width;
+		double maxX = width - exludingFactor*width;
+		double minY = exludingFactor*height;
+		double maxY = height - exludingFactor*height;
+		double distanceX = maxX - minX;
+		double distanceY = maxY - minY;
+
+		double stepX = distanceX/numberOfLocations;
+		double stepY = distanceY/numberOfLocations;
+
+		this.locations = new LinkedList<>();
 		ListIterator<Point2D.Double> addingIterator = locations.listIterator(0);
-		for (int x = 0; x < width; x += stepX) {
-			for (int y = 0; y < height; y+= stepY) {
+		for (double x = minX; x < maxX; x += stepX) {
+			for (double y = minY; y < maxY; y+= stepY) {
 				addingIterator.add(new Point2D.Double(x, y));
 			}
 		}
 
 		//still not sure I'll always get n, area not touched
-		//Random randomizer = new Random();
 		Collections.shuffle(locations);
-		//randomizer = new Random();
-		//Collections.shuffle(locations, randomizer);
 	}
 
 	public Point2D.Double next() {
@@ -45,63 +55,4 @@ public class RandomLocation {
 		}
 		return iterator.next();
 	}
-/*
-	private static LinkedList<E> shuffle(LinkedList<E> list) {
-		//keep copy
-		mergeShuffle(list, 0, list.size()-1);
-	}
-*/
-	/*
-	private static LinkedList<E> mergeShuffle(LinkedList<E> list, int start, int end) {
-		if (start < end) {
-			int midPoint = (end + start)/2;
-
-			mergeShuffle(list, start, midPoint);
-			mergeShuffle(list, midPoint+1, end);
-
-			merge(start, midPoint, end);
-		}
-
-		//ListIterator iterator = list.listIterator(start);
-		
-		if (shuffle1 > shuffle2) {
-			iterator.add(shuffle1);
-			iterator.add(suffle2);
-		} else {
-			iterator.add(suffle2);
-			iterator.add(shuffle1);
-		}
-		*/
-/*
-	}
-
-	temp merge(start, mid, end) {
-		temp;
-		for (int i = start, i <= end; i++) {
-			temp[i] = list[i];
-		}
-
-		int startOf1 = start;
-		int startOf2 = mid + 1;
-		int c = start;
-		while (startOf1 <= mid && startOf2 <= end) {
-			if (list[startOf1] < list[startOf2]) {
-				temp[c] = list[startOf1];
-				startOf1++;
-			} else {
-				temp[c] = list[startOf2];
-				startOf2++;
-			}
-			c++;
-		}
-
-		if (startOf1 <= mid) {
-			temp[c] = list[startOf1];
-			startOf1++;
-			c++;
-		}
-
-		return temp;
-	}
-*/
 }

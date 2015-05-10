@@ -12,3 +12,8 @@ Bullet:
  http://opengameart.org/content/bullet-collection-2-m484-games
  Master484 | http://m484games.ucoz.com/
  Public Domain CC0
+
+Background:
+ http://opengameart.org/content/space-parallax-background
+ scorcher24
+ Public Domain CC0

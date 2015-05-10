@@ -20,14 +20,31 @@ public class GameEngine {
 	public GameWindow gameWindow;
 	private RandomLocation randomLocations;
 	private int numberOfEnemies;
+	public int gameMode;
 	//must insure gameWindow is created first
+
+	public final static int LIMITED = 0;
+	//public final static INFINITE = 1;
+
+	public final static int WON = 1;
+	public final static int STILL_GOING = 0;
+	public final static int LOST = -1;
 
 	//engine is acting as a "tier"
 	//forces gamewindow to be created first
 	public GameEngine(GameWindow gameWindow, int numberOfEnemies) {
+		this(gameWindow, numberOfEnemies, LIMITED);
+	}
+
+	public GameEngine(GameWindow gameWindow, int numberOfEnemies, int gameMode) {
+		//infinite mode:
+		  //spawn whenever {}
+		  //player gains health if he kills, loses when health is zero
+
 		//GameEngine.current = this;
 		this.gameWindow = gameWindow;
 		this.numberOfEnemies = numberOfEnemies;
+		this.gameMode = gameMode;
 
 		//enemies*(arbitrary bullets) + player(itself+arbitrary bullets);
 		int estimatedNumberOfObjects = this.numberOfEnemies*5 + 1*(10+1);
@@ -43,10 +60,6 @@ public class GameEngine {
 		//this.setPlayer(player);
 		this.notifyWindowOfObjects();
 
-
-
-		GameTier.isRunning = true; //should it be here?
-		System.out.println(gameWindow.getInGamePanel().getWidth() + ".." + gameWindow.getInGamePanel().getHeight() + ".." + this.numberOfEnemies);
 		this.randomLocations = new RandomLocation(gameWindow.getInGamePanel().getWidth(), gameWindow.getInGamePanel().getHeight(), this.numberOfEnemies);
 		
 		this.spawnEnemies(this.numberOfEnemies);
@@ -103,7 +116,6 @@ public class GameEngine {
 		for (int i = 0; i < numberOfEnemies; i++) {
 			int enemyType = coin.nextInt(2);
 			Point2D.Double location = this.getRandomLocation();
-			System.out.println(location);
 			if (enemyType == 0) { //static enemy type, proper name
 				addGameObject(new FollowerEnemyShip(player, location));
 			} else if (enemyType == 1) {
@@ -185,19 +197,36 @@ public class GameEngine {
 				this.shooters.remove(deadObject);
 			}
 			
-			if (deadObject instanceof PlayerShip || (gameObjects.size() == 1 & gameObjects.get(0) instanceof PlayerShip)) {
-				GameTier.stop();
+			if (deadObject instanceof PlayerShip) {
 				this.player = null;
-				//this.gameWindow.getInGamePanel().freeze();
-				this.gameWindow.getInGamePanel().stop();
-
-				friendlyGameObjects.clear();
-				hostileGameObjects.clear();
-				shooters.clear();
 			}
 		}
 
 		deadGameObjects.clear();
+	}
+
+	/**
+	 * This method checks the state of the win/lose conditions
+	 * 
+	 * @return returns -1 if the player lost, 0 if the game is still going, and 1 if the player won
+	 */
+	public int checkEndCondition() {
+		switch (this.gameMode) {
+			case LIMITED: 	return limitedEndCondition();
+			default:		return 0;
+		}
+	}
+
+	private int limitedEndCondition() {
+		if (this.player == null) {
+			return LOST;
+		} else if (gameObjects.size() == 1 & gameObjects.get(0) instanceof PlayerShip) {
+			//since player can create objects (bullets), if player is not dead and he keeps fireing, size will not be one
+			//solution: tie stop to another condition as well
+			return WON;
+		} else {
+			return STILL_GOING;
+		}
 	}
 
 	private static boolean isFriendly(AbstractGameObject gameObject) {
@@ -227,5 +256,13 @@ public class GameEngine {
 
 	private Point2D.Double getRandomLocation() {
 		return randomLocations.next();
+	}
+
+	public void cleanUp() {
+		this.player = null;
+		gameObjects.clear();
+		friendlyGameObjects.clear();
+		hostileGameObjects.clear();
+		shooters.clear();
 	}
 }

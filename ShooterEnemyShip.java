@@ -1,4 +1,5 @@
 import java.awt.geom.Point2D;
+import java.util.Random;
 
 public class ShooterEnemyShip extends AbstractEnemyShip implements Shooter {
 	public static int healthPoints = 1;
@@ -22,7 +23,8 @@ public class ShooterEnemyShip extends AbstractEnemyShip implements Shooter {
 */
 	public ShooterEnemyShip(int healthPoints, String imageLocation, AbstractGameObject target, Point2D.Double location) {
 		super(healthPoints, imageLocation, target, location);
-		this.lastShotTime = System.currentTimeMillis();
+		int toShootOrNotToShoot = (new Random()).nextInt(2);
+		this.lastShotTime = System.currentTimeMillis() * toShootOrNotToShoot;
 	}
 
 	//could pull out to ship?
@@ -30,8 +32,6 @@ public class ShooterEnemyShip extends AbstractEnemyShip implements Shooter {
 		if (timeToShoot()) {
 			GameTier.gameEngine.addBullet(this);
 			lastShotTime = System.currentTimeMillis();
-		} else {
-			//System.out.println("Enemy cooling down: " + this);
 		}
 	}
 
