@@ -1,5 +1,6 @@
+package gameobjects;
+
 import java.awt.Graphics2D;
-import javax.swing.JPanel;
 import java.awt.image.BufferedImage;
 import java.awt.geom.Point2D;
 

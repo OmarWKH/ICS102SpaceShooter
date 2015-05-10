@@ -1,22 +1,23 @@
+package tier;
+
+import engine.*;
+import rendering.*;
+import gameobjects.*;
 import javax.swing.Timer;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-/*
-1. Movement is so tight it feels like I am pushing a rock 
-2. If you put the mouse closer to the ship bullets are shooten so slow
-3. Pressing in diagonal direction is impossible you move in the last pressed button direction
-4. It's impossible to shoot with mouse click when mouse is moving
-*/
-
+/**
+ * Class that ties the game parts together (engine and window).
+ * It functions to initlize */
 public class GameTier {
+	//ties to problems in engine, refer to notify
 	public static GameWindow gameWindow;
 	public static GameEngine gameEngine;
-	//if gameWindow is static, using it?
-	//public static PlayerShip player;
 	public static int numberOfEnemies;
 	public static String imagesFolder;
 	public static boolean isRunning;
+	public static int finalScore;
 	
 	public static void main(String[] args) {
 		//concrete safe structure?
@@ -25,31 +26,6 @@ public class GameTier {
 		GameWindow.backgroundLocation = GameTier.imagesFolder + "Background.png";
 		
 		gameWindow = new GameWindow();
-
-		/*
-		//stariting operations
-
-		//variables
-
-		//stopping operations
-
-		//force doing 'em
-
-		*/
-
-		//gameWindow.setVisible(true);
-		//PlayerShip player = new PlayerShip();
-		//engine.addGameObject(player);
-
-		//GameTier.isRunning = true;
-		
-
-/*
-		while (true) {
-			engine.update();
-			gameWindow.repaint();
-		}
-*/
 	}
 
 	public static void startGame(String difficulty, String mode) {
@@ -64,39 +40,29 @@ public class GameTier {
 							break;
 		}
 
-		//menu
-
 		gameEngine = new GameEngine(gameWindow, numberOfEnemies, mode);
 
-		int interval = 17;
-		//ActionListener gameLoop = (ActionEvent ae) -> { gameEngine.update(); gameWindow.repaint(); };
 		ActionListener gameLoop = new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				//if (true) {
-					//long started = System.currentTimeMillis();
 					gameEngine.update();
 					gameWindow.repaint();
-					//long ended = System.currentTimeMillis();
-					//System.out.println(ended-started);
-					int gameCondition = gameEngine.checkEndCondition();
 
+					int gameCondition = gameEngine.checkEndCondition();
 					if (gameCondition != GameEngine.STILL_GOING) {
 						gameEngine.cleanUp();
+
 						if (gameCondition == GameEngine.WON) {
 							gameWindow.won();
 						} else {
 							gameWindow.lost();
 						}
-						gameEngine = null;
-						//GameTier.isRunning = false;
-						//return;
-					}
 
-					//if()
-						//clear (and before "setup")
-				//}
+						gameEngine = null;
+					}
 			}
 		};
+
+		int interval = 17;
 		Timer timer = new Timer(interval, gameLoop);
 		timer.setRepeats(true);
 		timer.start();
@@ -128,11 +94,4 @@ public class GameTier {
 		PlayerShip.coolDownTime = playerCoolDown;
 		ShooterEnemyShip.coolDownTime = enemyCoolDown;
 	}
-
-	/*
-	public static void playerHereIsYourShip() {
-		PlayerShip player = new PlayerShip(gameWindow);
-
-	}
-	*/
 }

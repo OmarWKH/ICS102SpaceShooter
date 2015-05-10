@@ -1,3 +1,7 @@
+package gameobjects;
+
+import tier.*;
+import engine.*;
 import java.awt.image.BufferedImage;
 import java.awt.geom.AffineTransform;
 import java.awt.Graphics2D;
@@ -124,9 +128,6 @@ public abstract class AbstractGameObject implements GameObject {
 	public void setYDirection(double yDirection) {
 		this.yDirection = yDirection;
 	}
-	//set/get (x, y)
-	//set/get (point)
-	//set/get (x),(y)
 
 	@Override
 	public void setDirection(Point2D location) {

@@ -1,4 +1,4 @@
-import javax.swing.JPanel;
+package gameobjects;
 
 public abstract class AbstractShip extends AbstractGameObject {
 	public AbstractShip(int healthPoints, String imageLocation) {
@@ -10,7 +10,7 @@ public abstract class AbstractShip extends AbstractGameObject {
 		double newXPosition = this.getXPosition() + this.getXVelocity();
 		double newYPosition = this.getYPosition() - this.getYVelocity();
 		
-		//follower gets stuck
+		//follower gets stuck, therefore generator exludes edges
 		if (this.getXCenter() > panel.getWidth()) {
 			this.setXPosition(newXPosition - panel.getWidth());
 		} else if (this.getXCenter() < 0) {

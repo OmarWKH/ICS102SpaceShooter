@@ -1,0 +1,19 @@
+PlayerShip:
+ http://opengameart.org/content/spaceship-9
+ cyberjobe
+ Public Domain CC0
+
+EnemyShip (modified):
+ http://opengameart.org/content/spaceship-9
+ cyberjobe
+ Public Domain CC0
+
+Bullet (modified):
+ http://opengameart.org/content/sci-fi-space-simple-bullets
+ Bonsaiheldin | http://bonsaiheld.org
+ Public Domain CC0
+
+Background:
+ http://opengameart.org/content/space-backdrop
+ beren77
+ Public Domain CC0

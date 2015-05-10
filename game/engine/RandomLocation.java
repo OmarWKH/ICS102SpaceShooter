@@ -1,8 +1,9 @@
+package engine;
+
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.awt.geom.Point2D;
 import javax.swing.JPanel;
-import java.util.Random;
 import java.util.Collections;
 
 public class RandomLocation {

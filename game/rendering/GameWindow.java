@@ -1,13 +1,15 @@
+package rendering;
+
+import tier.*;
+import engine.*;
+import gameobjects.*;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-//import java.awt.event.ActionListener;
 import javax.swing.AbstractAction;
-import java.awt.event.ActionEvent;
-//import java.awt.event.KeyListener;
 import java.awt.event.KeyAdapter;
-//import java.awt.event.MouseListener;
 import java.awt.event.MouseAdapter;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyEvent;
 import java.awt.Color;
@@ -22,15 +24,6 @@ import java.awt.CardLayout;
 import java.awt.GridLayout;
 import java.awt.FlowLayout;
 import javax.swing.*;
-//import javax.swing.Action;
-//import javax.swing.AbstractAction;
-//import java.awt.event.ActionEvent;
-//undestand keystroke, actionmap, inputmap, key binding
-//import javax.swing.KeyStroke;
-
-//all
-  //extract variables
-  //check exception prone
 
 public class GameWindow extends JFrame {
 	private JPanel panel;
@@ -38,26 +31,28 @@ public class GameWindow extends JFrame {
 	private GamePanel gamePanel;
 	public static String backgroundLocation;
 	private Image background;
+	private CardLayout cards;
+	private GridLayout listLayout = new GridLayout(0, 1);
+	private MenusActions listener;
+
 	private String[] gameModes = {"Limited", "Endless"}; //get dynamically
 	private String[] difficulties = {"Normal", "Hard"}; //get dynamically
 	private JComboBox<String> modeChanger;
 	private JComboBox<String> difficultyChanger;
 	//other settings, resulotion (font size too), decide all game play values with ui
-	private GridLayout listLayout = new GridLayout(0, 1);
-	private MenusActions listener;
+	
 	private JButton button;
 	private JLabel label;
 	private JTextArea helpText;
-	//private JButton restart; //gameModes, gameDifficulty, some variable, maybe an array of game modes taken from engine?
-	CardLayout cards;
+	private int finalScore;
 
 	public GameWindow() {
 		this.setSize(960, 720);
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		cards = new CardLayout();
+		this.cards = new CardLayout();
 		this.setLayout(cards);
-		listener = new MenusActions();
+		this.listener = new MenusActions();
 		this.setBackgroundLocation(backgroundLocation);
 
 		//main menu
@@ -161,11 +156,6 @@ public class GameWindow extends JFrame {
 				cce.printStackTrace();
 				System.exit(1);
 			}
-
-			
-			//infinite:
-			//regarding health like I said before?
-			//enemies multiply (increase) each number of points
 		}
 	}
 
@@ -179,18 +169,16 @@ public class GameWindow extends JFrame {
 		GameTier.startGame(difficulty, mode);
 	}
 
+	//merge
 	public void won() {
 		this.gamePanel.cleanUp();
-		//set score to show
-		//show won card, which goes back to menu
+		//show score
 		cards.show(this.getContentPane(), "Won");
 		this.gamePanel = null;
 	}
-
 	public void lost() {
 		this.gamePanel.cleanUp();
-		//set score to show
-		//show lost card, wich goes back to menu
+		//show score
 		cards.show(this.getContentPane(), "Lost");
 		this.gamePanel = null;
 	}
@@ -218,48 +206,22 @@ public class GameWindow extends JFrame {
 		}
 	}
 
-/*
-	https://stackoverflow.com/questions/24802461/
-	how-to-repaint-properly-in-jpanel-inside-jframe
-*/
-
-	//sperate
 	public class GamePanel extends JPanel {
-		//private GameEngine engine;
 		private PlayerShip player;
 		private ArrayList<AbstractGameObject> gameObjects;
 		private int hpXLocation;
 		private int hpYLocation;
 		private int scoreXLocation;
 		private int socreYLocation;
-		//private sprites? array of 'em?
-
-		/*
+		
 		//seperate controls
-		//private AbstractAction moveUp = () -> player.moveUp();
-		private AbstractAction moveUp = new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				player.movementControls(ae);
-				System.out.println(ae.getActionCommand());
-			}
-		};
-
-		private AbstractAction exit = new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				System.exit(0);
-			}
-		};
-		*/
-
+		//seperate this?
 		public GamePanel() {
-			//this.gameEngine = engine;
-			//this.player = engine.getPlayer();
 			this.addKeyListener(new KeyboardInGameControls());
 			this.addMouseListener(new MouseInGameControls());
 			this.setBackground(Color.BLACK);
 			gameObjects = new ArrayList<AbstractGameObject>(); //dummy for paint, tied to structure problem
+
 			/*
 			this.getInputMap().put(KeyStroke.getKeyStroke("W"), "Move Up");
 			this.getActionMap().put("Move Up", this.moveUp);
@@ -271,15 +233,9 @@ public class GameWindow extends JFrame {
 			this.getActionMap().put("Exit", this.exit);
 			*/
 
-			//rendering is your job, so if you gonna render, you pass the sprites?
-
-			//player.setSprite(null);
 			this.setFocusable(true);
 			this.requestFocusInWindow();
 		}
-
-		//private initlize
-		//https://stackoverflow.com/questions/13735402/how-to-initialize-classes-dependent-on-each-other-in-java
 
 		@Override
 		public void paint(Graphics g) {
@@ -297,7 +253,7 @@ public class GameWindow extends JFrame {
 				try {
 					gameObject.draw(g2d);
 				} catch (NullPointerException npe) { //proper exception
-					System.out.println("Object failed painting: " + gameObject);
+					System.out.println("Object failed painting. We have: " + gameObjects);
 					npe.printStackTrace();
 					System.exit(0);
 				}
@@ -312,26 +268,16 @@ public class GameWindow extends JFrame {
 			this.socreYLocation = this.hpYLocation;
 		}
 
-		public void cleanUp() {
-			this.player = null;
-			cards.show(getContentPane(), "Main");
-		}
-
 		public void setGameObjects(ArrayList<AbstractGameObject> gameObjects) {
 			this.gameObjects = gameObjects;
 		}
 
-		//key binding
-		//have to make an action + method for each button release and button press
-
-
-		
-		
-/*
-		@Override
-		public void keyTyped(KeyEvent keyEvent) {
+		public void cleanUp() {
+			this.player = null;
+			cards.show(getContentPane(), "Main");
+			finalScore = GameTier.finalScore;
 		}
-*/
+		
 		class KeyboardInGameControls extends KeyAdapter {
 			@Override
 			public void keyPressed(KeyEvent keyEvent) {
@@ -364,24 +310,5 @@ public class GameWindow extends JFrame {
 				}
 			}
 		}
-/*
-		@Override
-		public void mouseClicked(MouseEvent me) {
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent me) {
-		}
-
-		@Override
-		public void mouseExited(MouseEvent me) {
-		}
-
-		
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-		}
-*/
 	}
 }
