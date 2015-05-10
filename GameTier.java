@@ -22,7 +22,7 @@ public class GameTier {
 		//concrete safe structure?
 
 		imagesFolder = "images/";
-		GameWindow.backgroundLocation = GameTier.imagesFolder + "newbackgroundsmallpng.png";
+		GameWindow.backgroundLocation = GameTier.imagesFolder + "Background.png";
 		
 		gameWindow = new GameWindow();
 
@@ -106,9 +106,9 @@ public class GameTier {
 		GameTier.numberOfEnemies = numberOfEnemies;
 
 		Bullet.imageLocation = GameTier.imagesFolder + "Bullet.png";
-		FollowerEnemyShip.imageLocation = GameTier.imagesFolder + "PlayerShip.png";
 		PlayerShip.imageLocation = GameTier.imagesFolder + "PlayerShip.png";
-		ShooterEnemyShip.imageLocation = GameTier.imagesFolder + "PlayerShip.png";
+		ShooterEnemyShip.imageLocation = GameTier.imagesFolder + "EnemyShip.png";
+		FollowerEnemyShip.imageLocation = GameTier.imagesFolder + "EnemyShip.png";
 
 		PlayerShip.xAcceleration = 1;
 		PlayerShip.yAcceleration = 1;
@@ -120,11 +120,10 @@ public class GameTier {
 		FollowerEnemyShip.xVelocity = 0.5;
 		FollowerEnemyShip.yVelocity = 0.5;
 		
-		
 		PlayerShip.healthPoints = playerHP;
 		Bullet.healthPoints = 1;
-		FollowerEnemyShip.healthPoints = enemyHP;
 		ShooterEnemyShip.healthPoints = enemyHP;
+		FollowerEnemyShip.healthPoints = enemyHP;
 
 		PlayerShip.coolDownTime = playerCoolDown;
 		ShooterEnemyShip.coolDownTime = enemyCoolDown;

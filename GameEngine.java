@@ -4,16 +4,15 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Random;
 
-//nullpointer
 //movement
-//circles
-//enemy sprite
 //java doc
+//circles
 //comments, orgnization
-//score, health
+//attributes finalize
 
-//endless: health increase partially with score
-//score: number of kills
+//nullpointer
+//freeze later in endless? Kill: 29, HP: 11
+//rotation messes up sometimes
 
 public class GameEngine {
 	//this is dangerous terretory
@@ -32,6 +31,7 @@ public class GameEngine {
 	private RandomLocation randomLocations;
 	private int numberOfEnemies;
 	public String gameMode;
+	private int killCount;
 	//must insure gameWindow is created first
 
 	public final static String LIMITED_MODE = "Limited";
@@ -249,6 +249,8 @@ public class GameEngine {
 			return LOST;
 		} else if (hostileGameObjects.size() == 1) {
 			spawnEnemies(numberOfEnemies + numberOfEnemies/3);
+			int playerHP = player.getHealthPoints() + (new Double(0.3*this.killCount).intValue());
+			player.setHealthPoints(playerHP);
 		}
 		return STILL_GOING;
 	}
@@ -263,6 +265,13 @@ public class GameEngine {
 
 	public void manDown(AbstractGameObject deadObject) {
 		this.deadGameObjects.add(deadObject);
+		if (deadObject instanceof AbstractEnemyShip) {
+			this.killCount++;
+		}
+	}
+
+	public int getKillCount() {
+		return this.killCount;
 	}
 
 	public void notifyWindowOfObjects() {

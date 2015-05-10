@@ -9,21 +9,17 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 
 public abstract class AbstractGameObject implements GameObject {
-	//float
 	private double xPosition;
 	private double yPosition;
 	private double xVelocity;
 	private double yVelocity;
 	private double xDirection;
 	private double yDirection;
-	//even if static, a method to initlize it would make it less, hardcody
-	public static JPanel panel; // = GameTier.gameWindow.getInGamePanel();
+	private int helathPoints;
 	private BufferedImage image;
 	private AffineTransform affineTransform;
-	private int helathPoints;
-	//dead
-	//collision
-
+	public static JPanel panel;
+	
 	public AbstractGameObject(int helathPoints, String imageLocation) {
 		this.setHealthPoints(helathPoints);
 		this.setImageLocation(imageLocation);
@@ -31,25 +27,24 @@ public abstract class AbstractGameObject implements GameObject {
 	}
 	
 	public AbstractGameObject() {
-		this(1, "bullet.png");
+		this(1, "Bullet.png");
 	}
 
-	//this won't work unless Directions are done in move and a image is passed
 	@Override
 	public void draw(Graphics2D g2d) {
-		//double xCenter = xPosition + image.getWidth()/2;
-		//double yCenter = yPosition + image.getHeight()/2;
-		//System.out.println(image.getWidth() + ".." + image.getHeight());
-
 		affineTransform.setToIdentity();
 		affineTransform.rotate(xDirection, yDirection, this.getXCenter(), this.getYCenter());
 		affineTransform.translate(xPosition, yPosition);
+
 		g2d.drawImage(image, affineTransform, null);
+
+		/*
 		g2d.setColor(Color.RED);
 		g2d.drawOval((int)xPosition, (int)yPosition, 10, 10);
 		g2d.setColor(Color.GREEN);
-		//g2d.drawOval(panel.getWidth()/2, panel.getHeight()/2, 10, 10);
+		g2d.drawOval(panel.getWidth()/2, panel.getHeight()/2, 10, 10);
 		g2d.drawOval((int)this.getXCenter(), (int)this.getYCenter(), 10, 10);
+		*/
 	}
 
 	@Override
@@ -63,7 +58,6 @@ public abstract class AbstractGameObject implements GameObject {
 	@Override
 	public abstract void moveDirection();
 
-	//if panel is scaled location won't update accordingly
 	@Override
 	public abstract void initializeLocation();
 

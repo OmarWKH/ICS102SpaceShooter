@@ -5,8 +5,7 @@ import java.awt.geom.Point2D;
 
 public interface GameObject {
 	public void draw(Graphics2D g2d);
-	//downside, had "setters" as protected, can't now
-	//do I want this interface thing more than I want the access thing?
+	
 	public void move();
 	public void movePosition();
 	public void moveDirection();
@@ -37,7 +36,6 @@ public interface GameObject {
 	public double getXCenter();
 	public double getYCenter();
 	public Point2D.Double getCenter();
-
 
 	public BufferedImage getImage();
 	public void setImage(BufferedImage image);

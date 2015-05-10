@@ -81,7 +81,8 @@ public class GameWindow extends JFrame {
 		panel = new JPanel(listLayout);
 		button = new JButton("Menu");
 		panel.add(asProperButton(button));
-		helpText = new JTextArea("Move with WASD or Arrows.\nShoot with LMB or Space.\nExit level with Escape."); //\nPause/Unpause with P.");
+		helpText = new JTextArea("Move with WASD or Arrows.\nShoot with LMB or Space.\nExit level with Escape.\nHard increases player and enemy HP + enemy speed and decreases enemy cooldown\nEndless introduces waves with increasing numbers and increasing HP depending on kill count."); //\nPause/Unpause with P.");
+		helpText.setLineWrap(true);
 		panel.add(asProper(helpText));
 		this.add(asLayeredPane(panel), "Help");
 
@@ -105,7 +106,7 @@ public class GameWindow extends JFrame {
 	}
 
 	private JComponent asProper(JComponent component) {
-		component.setFont(new Font(component.getFont().getFontName(), Font.BOLD, 40));
+		component.setFont(new Font(component.getFont().getFontName(), Font.BOLD, 20));
 		component.setForeground(Color.WHITE);
 		component.setOpaque(false);
 		return component;
@@ -113,6 +114,7 @@ public class GameWindow extends JFrame {
 
 	private JButton asProperButton(JButton button) {
 		button = (JButton)asProper(button);
+		button.setFont(new Font(button.getFont().getFontName(), Font.BOLD, 40));
 		button.addActionListener(listener);
 		button.setContentAreaFilled(false);
 		button.setBorderPainted(false);
@@ -289,7 +291,7 @@ public class GameWindow extends JFrame {
 			g2d.setColor(Color.WHITE);
 			g2d.setFont(new Font(g2d.getFont().getFontName(), Font.BOLD, 14));
 			g2d.drawString("HP: " + player.getHealthPoints(), hpXLocation, hpYLocation);
-			//g2d.drawString("Killed: " + player.getScore(), scoreXLocation, socreYLocation);
+			g2d.drawString("Killed: " + GameTier.gameEngine.getKillCount(), scoreXLocation, socreYLocation);
 
 			for (AbstractGameObject gameObject : gameObjects) {
 				try {
@@ -308,7 +310,6 @@ public class GameWindow extends JFrame {
 			this.hpYLocation = new Double(this.getHeight() * 0.1).intValue();
 			this.scoreXLocation = new Double(this.getWidth() - this.getWidth() * 0.1).intValue();
 			this.socreYLocation = this.hpYLocation;
-			System.out.println(hpXLocation);
 		}
 
 		public void cleanUp() {
