@@ -6,6 +6,11 @@ import java.awt.geom.Point2D;
 import javax.swing.JPanel;
 import java.util.Collections;
 
+/**
+ * This class is used to get a number of random unique locations in an area.
+ * 
+ * @author Omar Khashoggi
+ */
 public class RandomLocation {
 	private LinkedList<Point2D.Double> locations;
 	private ListIterator<Point2D.Double> iterator;
@@ -14,6 +19,10 @@ public class RandomLocation {
 	private int height;
 	private double exludingFactor;
 
+	/**
+	 * This constructor intitlizes a RandomLocation with a number of lcoations in the specified area (width and height) exluding an area according to the exluding factor.
+	 *
+	 */
 	RandomLocation(int width, int height, int numberOfLocations, double exludingFactor) {
 		this.width = width;
 		this.height = height;
@@ -23,10 +32,18 @@ public class RandomLocation {
 		iterator = this.locations.listIterator(0);
 	}
 
+	/**
+	 * This constructos intitlizes a RandomLocation with a number of lcoations in the specified area (width and height) exluding an area according to the default exlusing factor 0.5.
+	 *
+	 */
 	RandomLocation(int width, int height, int numberOfLocations) {
 		this(width, height, numberOfLocations, 0.05);
 	}
 
+	/**
+	 * This methods adds unique locations to the list and shuffles them to randomize, location are within the area exluding a precentage from the outer boundries.
+	 * 
+	 */
 	private void populateRandomUniqueList() {
 		double minX = exludingFactor*width;
 		double maxX = width - exludingFactor*width;
@@ -50,6 +67,12 @@ public class RandomLocation {
 		Collections.shuffle(locations);
 	}
 
+	/**
+	 * This method is used to get the next random unique location
+	 * If the list is exhausted it populates it again.
+	 *
+	 * @return returns a random unique location as Point2D.Double
+	 */
 	public Point2D.Double next() {
 		if (!iterator.hasNext()) {
 			this.populateRandomUniqueList();

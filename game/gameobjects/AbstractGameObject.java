@@ -12,6 +12,11 @@ import java.io.IOException;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
+/**
+ * This class provides implmentation to the interface GameObject. It's the basis of all game objects
+ *
+ * @author Omar Khashoggi
+ */
 public abstract class AbstractGameObject implements GameObject {
 	private double xPosition;
 	private double yPosition;
@@ -24,16 +29,23 @@ public abstract class AbstractGameObject implements GameObject {
 	private AffineTransform affineTransform;
 	public static JPanel panel;
 	
-	public AbstractGameObject(int helathPoints, String imageLocation) {
-		this.setHealthPoints(helathPoints);
+	/**
+	 * This constructor creates a game object with given HP and sprite location
+	 *
+	 * @param healthPoints the HP of the game object
+	 * @param imageLocation the location of the sprite
+	 */
+	public AbstractGameObject(int healthPoints, String imageLocation) {
+		this.setHealthPoints(healthPoints);
 		this.setImageLocation(imageLocation);
 		affineTransform = new AffineTransform();
 	}
-	
-	public AbstractGameObject() {
-		this(1, "Bullet.png");
-	}
 
+	/**
+	 * This method draws the object. It rotates it around the center according to direction and draws it on it's poisition.
+	 *
+	 * @param g2d the Graphics2D to do the drawing
+	 */
 	@Override
 	public void draw(Graphics2D g2d) {
 		affineTransform.setToIdentity();
@@ -51,6 +63,10 @@ public abstract class AbstractGameObject implements GameObject {
 		*/
 	}
 
+	/**
+	 * This method moves the object. It moves both position and direction.
+	 *
+	 */
 	@Override
 	public void move() {
 		this.movePosition();
@@ -139,6 +155,11 @@ public abstract class AbstractGameObject implements GameObject {
 		return new Point2D.Double(this.getXDirection(), this.getYDirection());
 	}
 
+	/**
+	 * This method sets the directoin toward a point. A vector is defined by the given location and the game object's center, that vector is normalized because it's used in velocity calculations.
+	 *
+	 * @param location a point containing the location of a point to set direction to
+	 */
 	@Override
 	public void setDirectionToward(Point2D location) {
 		Point2D.Double unitVector = normalize(location, this.getCenter());
@@ -170,6 +191,10 @@ public abstract class AbstractGameObject implements GameObject {
 		return new Point2D.Double(this.getXCenter(), this.getYCenter());
 	}
 
+	/**
+	 * This method is called if the object got hit, decreasing it's HP by 1. It then checks if it's dead. And if it is, informs the game engine.
+	 *
+	 */
 	@Override
 	public void gotHit() {
 		this.setHealthPoints(this.getHealthPoints() - 1);
@@ -178,11 +203,20 @@ public abstract class AbstractGameObject implements GameObject {
 		}
 	}
 
+	/**
+	 * This method checks if an object is dead.
+	 *
+	 * @return returns true if HP is less than or equals 0. False otherwise.
+	 */
 	@Override
 	public boolean isDead() {
 		return (getHealthPoints() <= 0);
 	}
 
+	/**
+	 * This method makes te object dead. It sets HP to -1 and calls gotHit()
+	 *
+	 */
 	@Override
 	public void makeDead() {
 		this.setHealthPoints(-1);
@@ -217,6 +251,13 @@ public abstract class AbstractGameObject implements GameObject {
 		this.helathPoints = helathPoints;
 	}
 
+	/**
+	 * The method normalized a vector given its two end points. It calculates the x and y component (n1-n2). Find the length of the vector by simple trigonometry. Then divides the components by the length, normalizing the vector.
+	 *
+	 * @param locatoin1 the first end point
+	 * @param location2 the second end point
+	 * @return returns a normalized vector in the form of a point (made vector by the game object's center)
+	 */
 	private static Point2D.Double normalize(Point2D location1, Point2D location2) {
 		double xComponent = (location1.getX() - location2.getX());
 		double yComponent = (location1.getY() - location2.getY());

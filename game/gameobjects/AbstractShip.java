@@ -1,10 +1,25 @@
 package gameobjects;
 
+/**
+ * This abstract class defines a basic ship. This ship moves in a certain way and wraps around the world
+ *
+ * @author Omar Khashoggi
+ */
 public abstract class AbstractShip extends AbstractGameObject {
+	/**
+	 * The constructor takes HP and sptire location
+	 *
+	 * @param healthPoints HP
+	 * @param imageLocation sprite locatoin
+	 */
 	public AbstractShip(int healthPoints, String imageLocation) {
 		super(healthPoints, imageLocation);
 	}
 
+	/**
+	 * Moves the position of the ship by increasing position with velocity. Taking into account wraping around edges
+	 *
+	 */
 	@Override
 	public void movePosition() {
 		double newXPosition = this.getXPosition() + this.getXVelocity();

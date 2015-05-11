@@ -9,7 +9,11 @@ import java.awt.event.ActionEvent;
 
 /**
  * Class that ties the game parts together (engine and window).
- * It functions to initlize */
+ * It functions to initlize gameplay values then sustain a gameloop until a condition is met.
+ *
+ * @author Omar Khashoggi
+ */
+
 public class GameTier {
 	//ties to problems in engine, refer to notify
 	public static GameWindow gameWindow;
@@ -28,6 +32,12 @@ public class GameTier {
 		gameWindow = new GameWindow();
 	}
 
+	/**
+	 * This method is used to start the game. It sets gameplay values and sustain the game loop asking the engine all the while about the game's condition. It initiates the clean up if the game is over.
+	 *
+	 * @param difficulty the difficulty of the game to be started
+	 * @param mode the mode for the game to be started in
+	 */
 	public static void startGame(String difficulty, String mode) {
 		GameTier.isRunning = true;
 
@@ -68,6 +78,16 @@ public class GameTier {
 		timer.start();
 	}
 
+	/**
+	 * This method initlized gameplay values and sprite locations.
+	 *
+	 * @param numberOfEnemies the number of enemies in the game, if the mode is Endless it's the initial number
+	 * @param playerHP the player's HP
+	 * @param enemyHP enemy HP, applies to all enemies
+	 * @param enemySpeed enemy speed, applied to all enemies
+	 * @param playerCoolDown the time before player is allowed to shoot again
+	 * @param enemyCoolDown the time before an enemy is allowed to shoot again
+	 */
 	public static void initializeGamePlayValues(int numberOfEnemies, int playerHP, int enemyHP, double enemySpeed, long playerCoolDown, long enemyCoolDown) {
 		GameTier.numberOfEnemies = numberOfEnemies;
 

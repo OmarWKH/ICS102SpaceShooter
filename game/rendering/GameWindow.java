@@ -25,6 +25,13 @@ import java.awt.GridLayout;
 import java.awt.FlowLayout;
 import javax.swing.*;
 
+/**
+ * Class that handles the window, including the menus and the game scene.
+ * It also handles input. I don't know how I feel about that.
+ *
+ * @author Omar Khashoggi
+ */
+
 public class GameWindow extends JFrame {
 	private JPanel panel;
 	private JPanel secondaryPanel;
@@ -45,7 +52,10 @@ public class GameWindow extends JFrame {
 	private JLabel label;
 	private JTextArea helpText;
 	private int finalScore;
-
+	/**
+	 * This constructor specifies the frame's values and adds all the panels in a cardlayout.
+	 *
+	 */
 	public GameWindow() {
 		this.setSize(960, 720);
 		this.setResizable(false);
@@ -100,6 +110,12 @@ public class GameWindow extends JFrame {
 		this.setVisible(true);
 	}
 
+	/**
+	 * This method styles a JComponent in the desired way. Makes it transparent and makes the font bold, size 20 and white.
+	 *
+	 * @param component the JComponent to be changed
+	 * @return returns a JComponent with the desired changed made so it fits the UI feel
+	 */
 	private JComponent asProper(JComponent component) {
 		component.setFont(new Font(component.getFont().getFontName(), Font.BOLD, 20));
 		component.setForeground(Color.WHITE);
@@ -107,6 +123,13 @@ public class GameWindow extends JFrame {
 		return component;
 	}
 
+	/**
+	 * This method styles a JButton in the desired way. Makes it transparent and makes the font bold, size 40 and white.
+	 * The method uses {@link #asProper(JComponent)}.
+	 *
+	 * @param component the JButton to be changed
+	 * @return returns a JButton with the desired changed made so it fits the UI feel
+	 */
 	private JButton asProperButton(JButton button) {
 		button = (JButton)asProper(button);
 		button.setFont(new Font(button.getFont().getFontName(), Font.BOLD, 40));
@@ -116,6 +139,13 @@ public class GameWindow extends JFrame {
 		return button;
 	}
 
+	/**
+	 * This method adds a background to a panel and makes it transparent.
+	 * It uses {@link #newBackgroundPanel()} to get a background panel.
+	 *
+	 * @param panel the panel to be changed
+	 * @return returns a JLayeredPane that includes the panel and a background panel
+	 */
 	private JLayeredPane asLayeredPane(JPanel panel) {
 		panel.setOpaque(false);
 		JLayeredPane layeredPane = new JLayeredPane();
@@ -126,6 +156,12 @@ public class GameWindow extends JFrame {
 		return layeredPane;
 	}
 
+	/**
+	 * This method creates a background panel with the background image.
+	 * It's used by {@link #asLayeredPane(panel)}.
+	 *
+	 * @return return a JButton with the desired changed made so it fits the UI feel
+	 */
 	private JPanel newBackgroundPanel() {
 		JPanel backgroundPanel = new JPanel(listLayout);
 		ImageIcon backgroundActually = new ImageIcon(backgroundLocation); 
@@ -136,7 +172,10 @@ public class GameWindow extends JFrame {
 		return backgroundPanel;
 	}
 
-
+	/**
+	 * This inner class handles button actions in the window.
+	 *
+	 */
 	class MenusActions extends AbstractAction {
 		@Override
 		public void actionPerformed(ActionEvent ae) {
@@ -159,6 +198,11 @@ public class GameWindow extends JFrame {
 		}
 	}
 
+	/**
+	 * This method starts the game depending on the values set by the user.
+	 * It passes the values to {@link tier.GameTier#startGame(String, String)} in the tier.
+	 *
+	 */
 	private void startGame() {
 		gamePanel = new GamePanel();
 		add(gamePanel, "Game");
@@ -170,12 +214,20 @@ public class GameWindow extends JFrame {
 	}
 
 	//merge
+	/**
+	 * This method is run after a win. It shows the win panel and cleans up the previous game.
+	 *
+	 */
 	public void won() {
 		this.gamePanel.cleanUp();
 		//show score
 		cards.show(this.getContentPane(), "Won");
 		this.gamePanel = null;
 	}
+	/**
+	 * This method is run after a loss. It shows the win panel and cleans up the previous game.
+	 *
+	 */
 	public void lost() {
 		this.gamePanel.cleanUp();
 		//show score
@@ -183,18 +235,39 @@ public class GameWindow extends JFrame {
 		this.gamePanel = null;
 	}
 
+	/**
+	 * This method is used to get the actual game panel.
+	 *
+	 * @return returns a GamePanel. Could return null if not game is running.
+	 */
 	public GamePanel getInGamePanel() {
 		return this.gamePanel;
 	}
 
+	/**
+	 * This method passes the game objects list to the game panel.
+	 *
+	 * @param gameObjects a reference to a list of game objects
+	 */
 	public void setGameObjects(ArrayList<AbstractGameObject> gameObjects) {
 		this.gamePanel.setGameObjects(gameObjects);
 	}
 
+	/**
+	 * This method passes the player to the game panel.
+	 * 
+	 * @param player the player
+	 */
 	public void setPlayer(PlayerShip player) {
 		this.gamePanel.setPlayer(player);
 	}
 
+	/**
+	 * This method sets the background given a location.
+	 * It throws an exception if the image failed to load.
+	 *
+	 * @param path the path to the background image location
+	 */
 	public void setBackgroundLocation(String path) {
 		try {
 			BufferedImage image = ImageIO.read(new File(path));
@@ -206,6 +279,11 @@ public class GameWindow extends JFrame {
 		}
 	}
 
+
+	/**
+	 * This inner class is the actual game panel. It represesnt the game scene and should only exist when the game is running
+	 *
+	 */
 	public class GamePanel extends JPanel {
 		private PlayerShip player;
 		private ArrayList<AbstractGameObject> gameObjects;
@@ -216,10 +294,13 @@ public class GameWindow extends JFrame {
 		
 		//seperate controls
 		//seperate this?
+		/**
+		 * This constructor initlizes GamePanel and adds listeners
+		 *
+		 */
 		public GamePanel() {
 			this.addKeyListener(new KeyboardInGameControls());
 			this.addMouseListener(new MouseInGameControls());
-			this.setBackground(Color.BLACK);
 			gameObjects = new ArrayList<AbstractGameObject>(); //dummy for paint, tied to structure problem
 
 			/*
@@ -237,6 +318,12 @@ public class GameWindow extends JFrame {
 			this.requestFocusInWindow();
 		}
 
+		/**
+		 * This method overrides paint(g) to paint the background, HP, score, and game objects.
+		 * It's never called directly. Only with repaint()
+		 *
+		 * @param g a graphics object
+		 */
 		@Override
 		public void paint(Graphics g) {
 			super.paint(g);
@@ -260,6 +347,11 @@ public class GameWindow extends JFrame {
 			}
 		}
 
+		/**
+		 * This method sets the player and calculates the appropriate location for HP and score to be painted.
+		 *
+		 * @param player the player
+		 */
 		public void setPlayer(PlayerShip player) {
 			this.player = player;
 			this.hpXLocation = new Double(this.getWidth() * 0.1).intValue();
@@ -268,17 +360,35 @@ public class GameWindow extends JFrame {
 			this.socreYLocation = this.hpYLocation;
 		}
 
+		/**
+		 * This method sets the game objects.
+		 * 
+		 * @param gameObjects a list of game objects
+		 */
 		public void setGameObjects(ArrayList<AbstractGameObject> gameObjects) {
 			this.gameObjects = gameObjects;
 		}
 
+		/**
+		 * This method cleans up after a game is done. It sets player to null, changes the view to the menu, and records the final score.
+		 *
+		 */
 		public void cleanUp() {
 			this.player = null;
 			cards.show(getContentPane(), "Main");
 			finalScore = GameTier.finalScore;
 		}
 		
+		/**
+		 * This inner class handles the in-game keybord controls.
+		 *
+		 */
 		class KeyboardInGameControls extends KeyAdapter {
+			/**
+			 * This method override keyPressed(). When it's fired with the right keys it could indicates that player should start moving or firing or the game should stop.
+			 * 
+			 * @param keyEvent the key event
+			 */
 			@Override
 			public void keyPressed(KeyEvent keyEvent) {
 				if (keyEvent.getKeyCode() == KeyEvent.VK_ESCAPE) {
@@ -294,6 +404,11 @@ public class GameWindow extends JFrame {
 				} 
 			}
 
+			/**
+			 * This method override keyReleased(). When it's fired it could indicate that player should stop and so informs player.
+			 * 
+			 * @param keyEvent the key event
+			 */
 			@Override
 			public void keyReleased(KeyEvent keyEvent) {
 				if (GameTier.isRunning) {
@@ -302,7 +417,16 @@ public class GameWindow extends JFrame {
 			}
 		}
 
+		/**
+		 * This class handles in-game mouse controls.
+		 *
+		 */
 		class MouseInGameControls extends MouseAdapter {
+			/**
+			 * This method overrides mousePressed(). When it's fired it indicated that player should shoot and so informs player.
+			 * 
+			 * @param me the mouse event
+			 */
 			@Override
 			public void mousePressed(MouseEvent me) {
 				if (GameTier.isRunning) {
