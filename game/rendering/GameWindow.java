@@ -50,7 +50,7 @@ public class GameWindow extends JFrame {
 	
 	private JButton button;
 	private JLabel label;
-	private JTextArea helpText;
+	private JTextArea text;
 	private int finalScore;
 	/**
 	 * This constructor specifies the frame's values and adds all the panels in a cardlayout.
@@ -86,9 +86,9 @@ public class GameWindow extends JFrame {
 		panel = new JPanel(listLayout);
 		button = new JButton("Menu");
 		panel.add(asProperButton(button));
-		helpText = new JTextArea("Move with WASD or Arrows.\nShoot with LMB or Space.\nExit level with Escape.\nHard increases player and enemy HP + enemy speed and decreases enemy cooldown\nEndless introduces waves with increasing numbers and increasing HP depending on kill count."); //\nPause/Unpause with P.");
-		helpText.setLineWrap(true);
-		panel.add(asProper(helpText));
+		text = new JTextArea("Move with WASD or Arrows.\nShoot with LMB or Space.\nExit level with Escape.\nHard increases player and enemy HP + enemy speed and decreases enemy cooldown\nEndless introduces waves with increasing numbers and increasing HP depending on kill count."); //\nPause/Unpause with P.");
+		text.setLineWrap(true);
+		panel.add(asProper(text));
 		this.add(asLayeredPane(panel), "Help");
 
 		//lost menu

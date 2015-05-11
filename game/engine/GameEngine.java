@@ -8,42 +8,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Random;
 
-//movement
-//nullpointer
-//freeze later in endless? Kill: 29, HP: 11
-//rotation messes up sometimes
-
-//could change to list
-//orgnization: see notifyObjectsOfWindow, nullpointer
-//sound? player cool down sound?
-
-
-//undestand keystroke, actionmap, inputmap, key binding
-//other settings, resulotion (font size too), decide all game play values with ui
-// search // in all, I remember GameWindow and maybe others had some
-
-////https://stackoverflow.com/questions/13735402/how-to-initialize-classes-dependent-on-each-other-in-java
-
-/*
-1. Movement is so tight it feels like I am pushing a rock 
-2. Pressing in diagonal direction is impossible you move in the last pressed button direction
-you want
-
-//enemy looking different
-//bullet speed too slow
-
-Also when first wave of enemies is killed the other wave appears from no where!
-Maybe create a one out of scene each time  a space ship dies and slowly push it into the scene
-Also make wrapping from one direction only
-
-I was thinking of adding power ups actually
-
-https://unity3d.com/learn/tutorials/projects/space-shooter
-Unity - Project: Space Shooter
-unity3d.com
-either continue it on Stencyl or Unity
-*/
-
 /**
  * This class acts as the engine of the game. It handles storing, creating, and removing objects, collision, and organized shooting and moving.
  * 
@@ -51,7 +15,6 @@ either continue it on Stencyl or Unity
  */
 
 public class GameEngine {
-	//this is a side effect of unclear structure
 	private PlayerShip player;
 	private ArrayList<AbstractGameObject> gameObjects;
 	private ArrayList<AbstractGameObject> friendlyGameObjects;
@@ -301,7 +264,7 @@ public class GameEngine {
 	private int endlessEndCondition() {
 		if (this.player == null) {
 			return LOST;
-		} else if (hostileGameObjects.size() == 1) {
+		} else if (hostileGameObjects.size() <= 1) {
 			spawnEnemies(numberOfEnemies + numberOfEnemies/3);
 			int playerHP = player.getHealthPoints() + (new Double(0.3*this.killCount).intValue());
 			player.setHealthPoints(playerHP);

@@ -18,15 +18,16 @@ public class RandomLocation {
 	private int width;
 	private int height;
 	private double exludingFactor;
+	private boolean isForward = true;
 
 	/**
-	 * This constructor intitlizes a RandomLocation with a number of lcoations in the specified area (width and height) exluding an area according to the exluding factor.
+	 * This constructor intitlizes a RandomLocation with thrice the number of lcoations in the specified area (width and height) exluding an area according to the exluding factor.
 	 *
 	 */
 	RandomLocation(int width, int height, int numberOfLocations, double exludingFactor) {
 		this.width = width;
 		this.height = height;
-		this.numberOfLocations = numberOfLocations;
+		this.numberOfLocations = 3*numberOfLocations;
 		this.exludingFactor = exludingFactor;
 		this.populateRandomUniqueList();
 		iterator = this.locations.listIterator(0);
@@ -62,21 +63,32 @@ public class RandomLocation {
 				addingIterator.add(new Point2D.Double(x, y));
 			}
 		}
-
 		//still not sure I'll always get n, area not touched
 		Collections.shuffle(locations);
 	}
 
 	/**
 	 * This method is used to get the next random unique location
-	 * If the list is exhausted it populates it again.
+	 * If the list is exhausted it goes the other way.
 	 *
 	 * @return returns a random unique location as Point2D.Double
 	 */
 	public Point2D.Double next() {
 		if (!iterator.hasNext()) {
-			this.populateRandomUniqueList();
+			setForward(false);
+			//this.populateRandomUniqueList();
+		} else if (!iterator.hasPrevious()) {
+			setForward(true);
 		}
-		return iterator.next();
+
+		if (isForward) {
+			return iterator.next();
+		} else {
+			return iterator.previous();
+		}
+	}
+
+	private void setForward(boolean forwardOrNot) {
+		this.isForward = forwardOrNot;
 	}
 }

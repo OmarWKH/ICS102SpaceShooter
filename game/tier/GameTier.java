@@ -52,6 +52,8 @@ public class GameTier {
 
 		gameEngine = new GameEngine(gameWindow, numberOfEnemies, mode);
 
+		int interval = 17;
+		Timer timer = new Timer(interval, null);
 		ActionListener gameLoop = new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 					gameEngine.update();
@@ -68,12 +70,11 @@ public class GameTier {
 						}
 
 						gameEngine = null;
+						timer.stop();
 					}
 			}
 		};
-
-		int interval = 17;
-		Timer timer = new Timer(interval, gameLoop);
+		timer.addActionListener(gameLoop);
 		timer.setRepeats(true);
 		timer.start();
 	}
