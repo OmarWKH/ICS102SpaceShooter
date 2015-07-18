@@ -1,7 +1,5 @@
 *.class
-*.java
-*.txt
-*.png
+game
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
