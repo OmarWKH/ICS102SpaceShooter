@@ -39,12 +39,14 @@ public class PlayerShip extends AbstractShip implements Shooter {
 	}
 
 	/**
-	 * This method makes the player directoin the same as the mouse
+	 * This method makes the player directoin the same as the mouse. It calculates the mouse's location according to the game scene.
 	 *
 	 */
 	@Override
 	public void moveDirection() {
-		Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
+		int mouseLocationX = MouseInfo.getPointerInfo().getLocation().x - panel.getLocationOnScreen().x;
+		int mouseLocationY = MouseInfo.getPointerInfo().getLocation().y - panel.getLocationOnScreen().y;
+		Point mouseLocation = new Point(mouseLocationX, mouseLocationY);
 		this.setDirectionToward(mouseLocation);
 	}
 
